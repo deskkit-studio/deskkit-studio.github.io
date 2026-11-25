@@ -1093,6 +1093,7 @@
       </a>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#tools" data-i18n="nav_tools">무료 계산기</a>
+        <a href="airbnb-turnover-checklist.html?lang=ko" id="nav-checklist-link" data-i18n="nav_checklist">청소 체크리스트</a>
         <a href="demo.html?app=staydesk&lang=ko" id="nav-demo-link" data-i18n="nav_demo">1분 라이브 데모</a>
         <a href="#solodesk" data-i18n="nav_solodesk">SoloDesk Studio</a>
         <a href="#staydesk" data-i18n="nav_staydesk">StayDesk Pro</a>
@@ -1672,6 +1673,7 @@
     const I18N = {
       ko: {
         nav_tools: '무료 계산기',
+        nav_checklist: '청소 체크리스트',
         nav_demo: '1분 라이브 데모',
         nav_solodesk: 'SoloDesk Studio',
         nav_staydesk: 'StayDesk Pro',
@@ -1806,6 +1808,7 @@
       },
       en: {
         nav_tools: 'Free Calculators',
+        nav_checklist: 'Turnover Checklist',
         nav_demo: '1-Min Live Demo',
         nav_solodesk: 'SoloDesk Studio',
         nav_staydesk: 'StayDesk Pro',
@@ -2132,7 +2135,9 @@
         fixedEl.step = p.fixedStep;
       }
 
-      // Sync live demo links to preserve active language
+      // Sync live demo & checklist links to preserve active language
+      const navChecklist = document.getElementById('nav-checklist-link');
+      if (navChecklist) navChecklist.href = 'airbnb-turnover-checklist.html?lang=' + lang;
       const navDemo = document.getElementById('nav-demo-link');
       if (navDemo) navDemo.href = 'demo.html?app=staydesk&lang=' + lang;
       const heroDemo = document.getElementById('hero-demo-btn');
