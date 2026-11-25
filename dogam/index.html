@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>멍냥도감 — 동네 동물 도감 &amp; 유기동물 AI 유사도 검색</title>
+<meta name="description" content="주변 강아지·고양이·새를 찍어 도감으로 모으고 태그로 공유하세요. 유기견·유기묘 실종 시 AI 시각 유사도로 동네 도감에서 닮은 아이를 빠르게 좁혀 찾습니다.">
+<meta name="theme-color" content="#162036">
+<link rel="manifest" href="./manifest.webmanifest">
+<style>
+:root{
+  --bg:#E6ECF1;--paper:#FFFFFF;--ink:#162036;--sub:#566378;--line:#CFD8E2;--soft:#F1F4F8;
+  --sun:#F4B400;--sun-ink:#231A00;--leaf:#1C7450;--leaf-soft:#E7F5EE;--warn:#B83B1A;--warn-soft:#FDF0EC;
+  --sky:#2563EB;--sky-soft:#EAF1FF;--screen:#F7F9FB;
+  --shadow:0 2px 6px rgba(22,32,54,.08),0 10px 24px rgba(22,32,54,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.5;word-break:keep-all}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.shell{max-width:460px;min-height:100dvh;margin:0 auto;background:var(--screen);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(22,32,54,.12);position:relative}
+header.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--sun);display:grid;place-items:center;font-weight:900;font-size:15px}
+.brand h1{margin:0;font-size:18px;font-weight:800;letter-spacing:-.02em}
+.brand small{display:block;font-size:11px;color:var(--sub);font-weight:600;margin-top:-2px}
+.top-actions{display:flex;gap:6px}
+.btn-mini{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:4px}
+.btn-mini.accent{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+main{flex:1;padding:14px 16px 94px}
+.view{display:none}
+.view.active{display:block}
+
+/* Summary Strip */
+.hero-strip{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px}
+.hero-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hero-title{font-size:15px;font-weight:800;margin:0}
+.hero-sub{font-size:12.5px;color:var(--sub);margin:3px 0 0}
+.counts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.cbox{background:var(--soft);border-radius:10px;padding:8px 6px;text-align:center}
+.cbox b{display:block;font-size:16px;font-weight:800}
+.cbox span{font-size:11px;color:var(--sub);font-weight:600}
+
+/* Filters */
+.search-row{display:flex;gap:6px;margin-bottom:10px}
+.search-row input{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.search-row select{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:9px 8px;font-size:12.5px;font-weight:600;max-width:118px}
+.tabs-cat{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.tabs-cat button{flex:none;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:700;color:var(--sub)}
+.tabs-cat button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tag-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tag-chip{border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:3px 8px;font-size:11.5px;font-weight:600;color:var(--sub)}
+.tag-chip.on{background:var(--sun);color:var(--sun-ink);border-color:var(--sun)}
+
+/* Photo-print grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px 8px 10px;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
+.card:active{transform:scale(.98)}
+.thumb{width:100%;aspect-ratio:1/1;border-radius:8px;overflow:hidden;background:var(--soft);position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.badge-sp{position:absolute;left:6px;top:6px;background:rgba(22,32,54,.84);color:#fff;font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:5px}
+.badge-freq{position:absolute;right:6px;bottom:6px;background:var(--sun);color:var(--sun-ink);font-size:10.5px;font-weight:800;padding:2px 6px;border-radius:5px}
+.card-name{margin:8px 2px 2px;font-size:14.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.card-meta{margin:0 2px;font-size:11.5px;color:var(--sub)}
+.card-tags{margin:6px 2px 0;display:flex;flex-wrap:wrap;gap:4px}
+.card-tags span{font-size:10.5px;background:var(--soft);color:var(--sub);padding:2px 5px;border-radius:4px;font-weight:600}
+
+/* Forms */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.panel h2{margin:0 0 4px;font-size:17px;font-weight:800}
+.panel p.desc{margin:0 0 12px;font-size:12.5px;color:var(--sub)}
+.upload-box{border:2px dashed var(--line);border-radius:12px;padding:16px;text-align:center;background:var(--soft);cursor:pointer;position:relative;overflow:hidden}
+.upload-box img.preview{max-height:210px;width:100%;object-fit:cover;border-radius:8px;display:block;margin:0 auto 8px}
+.upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ai-chip-box{margin-top:8px;background:var(--leaf-soft);color:var(--leaf);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:space-between;gap:8px}
+.ai-chip-box.show{display:flex}
+.swatches{display:flex;gap:4px}
+.sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.18)}
+
+.field{margin-top:11px}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:4px;color:var(--ink)}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:9px;padding:9px 11px;font-size:13.5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.safe-note{margin-top:10px;background:var(--soft);border-left:3px solid var(--leaf);padding:8px 10px;border-radius:6px;font-size:11.5px;color:var(--sub)}
+.btn-primary{width:100%;margin-top:14px;background:var(--ink);color:#fff;border:0;border-radius:11px;padding:13px;font-size:14.5px;font-weight:800}
+.btn-sun{width:100%;margin-top:12px;background:var(--sun);color:var(--sun-ink);border:0;border-radius:11px;padding:13px;font-size:14.5px;font-weight:800}
+
+/* Missing Pet AI Search */
+.lost-banner{background:var(--warn-soft);border:1px solid #F3C4B6;border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.lost-banner strong{color:var(--warn);font-size:13.5px;display:block}
+.lost-banner span{font-size:12px;color:#6E3323}
+.match-card{display:grid;grid-template-columns:86px 1fr;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer}
+.match-card img{width:86px;height:86px;border-radius:8px;object-fit:cover}
+.score-pill{display:inline-block;background:var(--warn);color:#fff;font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:6px}
+.score-pill.high{background:var(--leaf)}
+.reasons{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.reasons span{font-size:11px;background:var(--sky-soft);color:var(--sky);padding:2px 6px;border-radius:5px;font-weight:700}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{width:100%;max-width:460px;max-height:90dvh;overflow-y:auto;background:var(--paper);border-radius:18px 18px 0 0;padding:16px 16px 26px}
+.modal-img{width:100%;max-height:280px;object-fit:cover;border-radius:12px;background:var(--soft)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin:12px 0 4px}
+.modal-head h3{margin:0;font-size:19px;font-weight:800}
+.close-x{border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700}
+.action-stack{display:grid;gap:8px;margin-top:14px}
+.btn-outline{width:100%;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:10px;padding:11px;font-size:13.5px;font-weight:800;text-align:center;text-decoration:none;display:block}
+.btn-3d{width:100%;border:0;background:#D96B38;color:#fff;border-radius:10px;padding:12px;font-size:13.5px;font-weight:800;text-align:center;text-decoration:none;display:block}
+
+/* Bottom Tabbar */
+nav.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 12px calc(10px + env(safe-area-inset-bottom));z-index:30}
+nav.tabbar button{border:0;background:transparent;padding:8px 4px;border-radius:10px;font-size:12.5px;font-weight:700;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabbar button .ico{font-size:18px;line-height:1}
+nav.tabbar button.on{color:var(--ink);background:var(--soft)}
+nav.tabbar button.shoot-tab{background:var(--sun);color:var(--sun-ink);font-weight:800}
+
+.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 14px;border-radius:10px;font-size:12.5px;font-weight:700;z-index:60;display:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{display:block}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark">도</div>
+      <div>
+        <h1>멍냥도감 <span style="font-size:11px;font-weight:700;color:var(--leaf);background:var(--leaf-soft);padding:1px 6px;border-radius:4px">BETA</span></h1>
+        <small>동네 강아지·고양이·새 도감 + AI 찾기</small>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn-mini" id="btnShareBook">도감 자랑</button>
+      <a class="btn-mini accent" href="../meongnyang/">3D 피규어</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- VIEW 1: 도감 피드 -->
+    <section class="view active" id="view-feed">
+      <div class="hero-strip">
+        <div class="hero-row">
+          <div>
+            <p class="hero-title">우리 동네에서 만난 동물들</p>
+            <p class="hero-sub">가볍게 찍어 태그로 공유하세요. 쌓인 기록은 실종 시 AI 찾기에 쓰입니다.</p>
+          </div>
+        </div>
+        <div class="counts" id="countBoxes"></div>
+      </div>
+
+      <div class="search-row">
+        <input id="qInput" type="search" placeholder="이름, 품종, #태그 검색 (예: 치즈, 까치)">
+        <select id="areaFilter">
+          <option value="전체">전체 동네</option>
+        </select>
+      </div>
+
+      <div class="tabs-cat" id="catTabs">
+        <button class="on" data-cat="전체">전체</button>
+        <button data-cat="강아지">🐶 강아지</button>
+        <button data-cat="고양이">🐱 고양이</button>
+        <button data-cat="새">🐦 새</button>
+        <button data-cat="기타">🐿️ 기타</button>
+      </div>
+
+      <div class="tag-bar" id="tagBar"></div>
+      <div class="grid" id="cardGrid"></div>
+    </section>
+
+    <!-- VIEW 2: 찍어 올리기 -->
+    <section class="view" id="view-add">
+      <div class="panel">
+        <h2>오늘 만난 동물 도감에 넣기</h2>
+        <p class="desc">사진을 올리면 AI 시각 특징(대표 털색·패턴 벡터)이 자동 추출되어 도감과 유사도 검색에 저장됩니다.</p>
+
+        <div class="upload-box" id="addUploadBox">
+          <img id="addPreview" class="preview" style="display:none" alt="미리보기">
+          <div id="addPlaceholder">
+            <div style="font-size:28px;margin-bottom:4px">📷</div>
+            <strong style="font-size:14px">사진 찍기 또는 앨범에서 고르기</strong>
+            <div style="font-size:12px;color:var(--sub);margin-top:2px">강아지 · 고양이 · 공원 새 · 다람쥐 모두 OK</div>
+          </div>
+          <input type="file" id="addFile" accept="image/*">
+        </div>
+
+        <div class="ai-chip-box" id="addAiChip">
+          <span id="addAiText">시각 특징 자동 분석 완료</span>
+          <div class="swatches" id="addSwatches"></div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>동물 종류</label>
+            <select id="fSpecies">
+              <option value="강아지">🐶 강아지</option>
+              <option value="고양이">🐱 고양이</option>
+              <option value="새">🐦 새</option>
+              <option value="기타">🐿️ 기타</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>별명 / 종 이름</label>
+            <input id="fName" placeholder="예: 골목 치즈냥, 흰둥이, 까치">
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>대표 털색 / 깃털색</label>
+            <select id="fColor">
+              <option value="흰색/크림">흰색 · 크림</option>
+              <option value="치즈/갈색">치즈 · 노랑 · 갈색</option>
+              <option value="검정/회색">검정 · 회색</option>
+              <option value="얼룩/삼색">얼룩 · 삼색 · 고등어</option>
+              <option value="화려한색">파랑 · 초록 · 알록달록(새)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>귀 모양 / 크기</label>
+            <select id="fEar">
+              <option value="접힌귀">접힌 귀</option>
+              <option value="뾰족귀">뾰족 선 귀</option>
+              <option value="해당없음">해당 없음 (새 등)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>동네 (구/동 단위만)</label>
+            <input id="fArea" value="서울 마포구" placeholder="예: 서울 마포구">
+          </div>
+          <div class="field">
+            <label>목줄 · 인식표</label>
+            <select id="fCollar">
+              <option value="없음">없음 (길동물/자유)</option>
+              <option value="목줄있음">목줄 · 하네스 있음</option>
+              <option value="미확인">잘 안 보임</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>#태그 (띄어쓰기나 쉼표로 구분)</label>
+          <input id="fTags" placeholder="예: #동네단골 #접힌귀 #산책로 #귀여움">
+        </div>
+
+        <div class="field">
+          <label>한 줄 메모 (특징·표정)</label>
+          <input id="fMemo" placeholder="예: 이마에 회색 점, 사람 보면 꼬리 흔듦">
+        </div>
+
+        <div class="safe-note">
+          🛡️ <b>안전 약속:</b> 길고양이·새 보호를 위해 정확한 번지나 집 앞 주소는 적지 않고 <b>구/동 단위</b>만 남깁니다. 사람 얼굴·차량 번호판이 나오지 않게 올려주세요.
+        </div>
+
+        <button class="btn-sun" id="btnSaveEntry">도감에 첫 장 저장하기</button>
+      </div>
+    </section>
+
+    <!-- VIEW 3: 유기견·유기묘 AI 유사도 찾기 -->
+    <section class="view" id="view-lost">
+      <div class="lost-banner">
+        <strong>🔍 유기견 · 유기묘 AI 유사도 검색 (추가 기능)</strong>
+        <span>잃어버린 아이 사진 1장과 특징을 넣으면, 평소 사람들이 올린 동네 도감 DB에서 시각 유사도 + 외형 특징으로 닮은 후보를 빠르게 좁혀드립니다.</span>
+      </div>
+
+      <div class="panel">
+        <h2>실종 동물 사진으로 후보 좁히기</h2>
+        <p class="desc">사진의 색상 분포(12차원 시각 벡터) + 종·털색·귀·목줄·동네를 합산해 유사도 순으로 정렬합니다.</p>
+
+        <div class="upload-box">
+          <img id="lostPreview" class="preview" style="display:none" alt="실종 동물 미리보기">
+          <div id="lostPlaceholder">
+            <div style="font-size:26px;margin-bottom:4px">🔎</div>
+            <strong style="font-size:13.5px">찾고 있는 강아지·고양이 사진 올리기</strong>
+            <div style="font-size:12px;color:var(--sub);margin-top:2px">사진 없이 특징만 골라도 바로 검색 가능</div>
+          </div>
+          <input type="file" id="lostFile" accept="image/*">
+        </div>
+
+        <div class="ai-chip-box" id="lostAiChip">
+          <span id="lostAiText">사진 시각 특징 추출 완료</span>
+          <div class="swatches" id="lostSwatches"></div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>동물 종류</label>
+            <select id="lSpecies">
+              <option value="강아지">🐶 강아지</option>
+              <option value="고양이">🐱 고양이</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>털색 / 무늬</label>
+            <select id="lColor">
+              <option value="전체">상관없음</option>
+              <option value="흰색/크림">흰색 · 크림</option>
+              <option value="치즈/갈색">치즈 · 노랑 · 갈색</option>
+              <option value="검정/회색">검정 · 회색</option>
+              <option value="얼룩/삼색">얼룩 · 삼색 · 고등어</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>귀 모양</label>
+            <select id="lEar">
+              <option value="전체">상관없음</option>
+              <option value="접힌귀">접힌 귀</option>
+              <option value="뾰족귀">뾰족 선 귀</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>실종 동네 (선택)</label>
+            <input id="lArea" placeholder="예: 서울 마포구">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>특징 키워드 (선택)</label>
+          <input id="lKey" placeholder="예: 이마 점, 분홍 코, 빨간 목줄">
+        </div>
+
+        <button class="btn-primary" id="btnRunSearch">AI 유사도 후보 좁히기 실행</button>
+      </div>
+
+      <div id="lostResultsWrap" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:4px 2px 10px">
+          <strong style="font-size:14.5px" id="lostResultTitle">닮은 후보</strong>
+          <button class="btn-mini" id="btnMakePoster">실종 전단지 카드 만들기</button>
+        </div>
+        <div id="lostResults"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="on" data-view="feed"><span class="ico">📖</span><span>동네 도감</span></button>
+    <button class="shoot-tab" data-view="add"><span class="ico">📷</span><span>찍어 올리기</span></button>
+    <button data-view="lost"><span class="ico">🔍</span><span>유기동물 찾기</span></button>
+  </nav>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-bg" id="detailModal">
+  <div class="modal" id="detailBody"></div>
+</div>
+
+<!-- Hidden canvas for image analysis & share card export -->
+<canvas id="workCanvas" width="96" height="96" style="display:none"></canvas>
+<canvas id="shareCanvas" width="1080" height="1350" style="display:none"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'meongnyang_dogam_v1_entries';
+
+function svgCardData(bg1, bg2, emoji, label, accent) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${bg1}"/><stop offset="100%" stop-color="${bg2}"/></linearGradient></defs>
+    <rect width="480" height="480" fill="url(#g)"/>
+    <circle cx="240" cy="215" r="126" fill="rgba(255,255,255,0.42)"/>
+    <text x="240" y="252" text-anchor="middle" font-size="136">${emoji}</text>
+    <rect x="34" y="388" width="412" height="58" rx="14" fill="rgba(22,32,54,0.82)"/>
+    <text x="240" y="425" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-weight="700" font-size="24">${label}</text>
+    <circle cx="420" cy="56" r="18" fill="${accent}"/>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+const SEED_ENTRIES = [
+  {
+    id: 'seed-1',
+    name: '흰둥이',
+    species: '강아지',
+    color: '흰색/크림',
+    ear: '접힌귀',
+    collar: '목줄있음',
+    area: '서울 마포구',
+    tags: ['#산책단골', '#접힌귀', '#이마회색점', '#웃는얼굴'],
+    memo: '이마에 회색 점 하나 있고 사람 보면 혀 내밀고 웃어요.',
+    seenCount: 5,
+    date: '2026-11-24',
+    img: '../meongnyang/assets/sample-dog.jpg',
+    vec: [0.68,0.64,0.58, 0.22,0.18,0.16, 0.08,0.06,0.05, 0.14,0.12,0.10],
+    palette: ['#E8E4DC','#B8B0A4','#5A5652']
+  },
+  {
+    id: 'seed-2',
+    name: '편의점 치즈냥',
+    species: '고양이',
+    color: '치즈/갈색',
+    ear: '뾰족귀',
+    collar: '없음',
+    area: '서울 마포구',
+    tags: ['#치즈태비', '#식빵자세', '#동네단골', '#귀컷팅'],
+    memo: '오후 4시마다 햇볕 드는 계단에서 식빵 굽는 노란 고양이.',
+    seenCount: 8,
+    date: '2026-11-25',
+    img: svgCardData('#FCE5B6','#E8A849','🐱','치즈태비 · 마포구','#F4B400'),
+    vec: [0.85,0.62,0.28, 0.72,0.48,0.20, 0.12,0.09,0.06, 0.35,0.24,0.10],
+    palette: ['#E8A849','#FCE5B6','#8C5A22']
+  },
+  {
+    id: 'seed-3',
+    name: '공원 까치',
+    species: '새',
+    color: '검정/회색',
+    ear: '해당없음',
+    collar: '없음',
+    area: '서울 성동구',
+    tags: ['#공원새', '#까치', '#아침산책'],
+    memo: '벤치 옆에 내려와 콩 주워 먹는 당당한 까치.',
+    seenCount: 4,
+    date: '2026-11-23',
+    img: svgCardData('#D8E5F2','#7B9EC2','🐦','공원 까치 · 성동구','#2563EB'),
+    vec: [0.22,0.26,0.34, 0.78,0.82,0.88, 0.10,0.12,0.16, 0.15,0.22,0.35],
+    palette: ['#1E293B','#E2E8F0','#3B82F6']
+  },
+  {
+    id: 'seed-4',
+    name: '삼색이 언니',
+    species: '고양이',
+    color: '얼룩/삼색',
+    ear: '뾰족귀',
+    collar: '없음',
+    area: '서울 마포구',
+    tags: ['#삼색냥', '#코점', '#골목길'],
+    memo: '코 옆에 작은 검정 점이 있고 꼬리가 짧은 삼색 고양이.',
+    seenCount: 3,
+    date: '2026-11-22',
+    img: svgCardData('#F6ECE2','#D4A478','🐈','삼색 고양이 · 마포구','#B83B1A'),
+    vec: [0.76,0.70,0.62, 0.58,0.34,0.22, 0.18,0.16,0.16, 0.25,0.20,0.16],
+    palette: ['#F5EFE6','#C97D44','#2B2B2B']
+  },
+  {
+    id: 'seed-5',
+    name: '보리 (크림 푸들)',
+    species: '강아지',
+    color: '흰색/크림',
+    ear: '접힌귀',
+    collar: '목줄있음',
+    area: '서울 영등포구',
+    tags: ['#크림푸들', '#빨간하네스', '#산책로'],
+    memo: '빨간 하네스 착용, 복슬복슬한 귀가 매력적인 작은 강아지.',
+    seenCount: 2,
+    date: '2026-11-25',
+    img: '../meongnyang/assets/pup-%EB%B3%B4%EB%A6%AC.png',
+    vec: [0.78,0.75,0.70, 0.30,0.26,0.24, 0.12,0.08,0.08, 0.20,0.18,0.16],
+    palette: ['#EFECE6','#A89F94','#333333']
+  },
+  {
+    id: 'seed-6',
+    name: '하천 청둥오리',
+    species: '새',
+    color: '화려한색',
+    ear: '해당없음',
+    collar: '없음',
+    area: '서울 영등포구',
+    tags: ['#철새', '#청둥오리', '#물가산책'],
+    memo: '초록빛 머리가 반짝이는 청둥오리 한 쌍.',
+    seenCount: 6,
+    date: '2026-11-24',
+    img: svgCardData('#CBE8DC','#4B9B7B','🦆','청둥오리 · 영등포구','#1C7450'),
+    vec: [0.18,0.52,0.38, 0.50,0.44,0.38, 0.24,0.38,0.42, 0.20,0.48,0.36],
+    palette: ['#1C7450','#8C6D46','#60A5FA']
+  }
+];
+
+let entries = loadEntries();
+let state = { cat: '전체', tag: '', area: '전체', q: '' };
+let addImage = { dataUrl: '', vec: null, palette: [] };
+let lostImage = { dataUrl: '', vec: null, palette: [] };
+
+function loadEntries() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [...SEED_ENTRIES];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length ? parsed : [...SEED_ENTRIES];
+  } catch { return [...SEED_ENTRIES]; }
+}
+function saveEntries() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); } catch {}
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// Extract 12-dim visual color signature vector + top 3 hex colors from uploaded image
+function analyzeImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        // Resize for storage (max 560px)
+        const maxSide = 560;
+        let w = img.width, h = img.height;
+        if (w > h && w > maxSide) { h = Math.round(h * maxSide / w); w = maxSide; }
+        else if (h >= w && h > maxSide) { w = Math.round(w * maxSide / h); h = maxSide; }
+        const outC = document.createElement('canvas');
+        outC.width = w; outC.height = h;
+        outC.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = outC.toDataURL('image/jpeg', 0.82);
+
+        // Compute 4-quadrant average RGB (12-dim visual vector) + dominant color hint
+        const wc = document.getElementById('workCanvas');
+        const ctx = wc.getContext('2d', { willReadFrequently: true });
+        ctx.clearRect(0, 0, 96, 96);
+        ctx.drawImage(img, 0, 0, 96, 96);
+        const d = ctx.getImageData(0, 0, 96, 96).data;
+        const sums = new Array(12).fill(0);
+        const cnts = [0,0,0,0];
+        let warm = 0, dark = 0, bright = 0, satSum = 0;
+        for (let y = 0; y < 96; y++) {
+          for (let x = 0; x < 96; x++) {
+            const idx = (y * 96 + x) * 4;
+            const r = d[idx] / 255, g = d[idx+1] / 255, b = d[idx+2] / 255;
+            const q = (y < 48 ? 0 : 2) + (x < 48 ? 0 : 1);
+            sums[q*3] += r; sums[q*3+1] += g; sums[q*3+2] += b;
+            cnts[q]++;
+            const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+            const sat = mx ? (mx - mn) / mx : 0;
+            satSum += sat;
+            if (mx > 0.75 && sat < 0.25) bright++;
+            if (mx < 0.30) dark++;
+            if (r > g && g > b && (r - b) > 0.18) warm++;
+          }
+        }
+        const vec = sums.map((v, i) => Number((v / Math.max(1, cnts[Math.floor(i/3)])).toFixed(3)));
+        const total = 96 * 96;
+        let guessedColor = '얼룩/삼색';
+        if (bright / total > 0.42) guessedColor = '흰색/크림';
+        else if (dark / total > 0.42) guessedColor = '검정/회색';
+        else if (warm / total > 0.25) guessedColor = '치즈/갈색';
+        else if (satSum / total > 0.35) guessedColor = '화려한색';
+
+        const toHex = (r,g,b) => '#' + [r,g,b].map(x => Math.min(255, Math.round(x*255)).toString(16).padStart(2,'0')).join('');
+        const palette = [
+          toHex(vec[0],vec[1],vec[2]),
+          toHex(vec[3],vec[4],vec[5]),
+          toHex(vec[6],vec[7],vec[8])
+        ];
+        resolve({ dataUrl, vec, palette, guessedColor });
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function cosineSim(a, b) {
+  if (!a || !b || a.length !== b.length) return 0;
+  let dot = 0, na = 0, nb = 0;
+  for (let i = 0; i < a.length; i++) { dot += a[i]*b[i]; na += a[i]*a[i]; nb += b[i]*b[i]; }
+  return (na && nb) ? dot / (Math.sqrt(na) * Math.sqrt(nb)) : 0;
+}
+
+function renderCounts() {
+  const cAll = entries.length;
+  const cDog = entries.filter(e => e.species === '강아지').length;
+  const cCat = entries.filter(e => e.species === '고양이').length;
+  const cBird = entries.filter(e => e.species === '새').length;
+  document.getElementById('countBoxes').innerHTML = `
+    <div class="cbox"><b>${cAll}</b><span>전체 도감</span></div>
+    <div class="cbox"><b>${cDog}</b><span>🐶 강아지</span></div>
+    <div class="cbox"><b>${cCat}</b><span>🐱 고양이</span></div>
+    <div class="cbox"><b>${cBird}</b><span>🐦 새</span></div>
+  `;
+}
+
+function renderAreasAndTags() {
+  const areaSel = document.getElementById('areaFilter');
+  const areas = ['전체', ...new Set(entries.map(e => e.area))];
+  const cur = state.area;
+  areaSel.innerHTML = areas.map(a => `<option value="${a}" ${a===cur?'selected':''}>${a==='전체'?'전체 동네':a}</option>`).join('');
+
+  const tagCounts = {};
+  entries.forEach(e => (e.tags || []).forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; }));
+  const topTags = Object.entries(tagCounts).sort((a,b) => b[1]-a[1]).slice(0, 8).map(x => x[0]);
+  document.getElementById('tagBar').innerHTML = topTags.map(t =>
+    `<button class="tag-chip ${state.tag===t?'on':''}" data-tag="${t}">${t}</button>`
+  ).join('');
+}
+
+function renderFeed() {
+  renderCounts();
+  renderAreasAndTags();
+  const q = state.q.trim().toLowerCase();
+  const filtered = entries.filter(e => {
+    if (state.cat !== '전체' && e.species !== state.cat) return false;
+    if (state.area !== '전체' && e.area !== state.area) return false;
+    if (state.tag && !(e.tags || []).includes(state.tag)) return false;
+    if (q) {
+      const hay = [e.name, e.species, e.color, e.area, e.memo, ...(e.tags||[])].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const grid = document.getElementById('cardGrid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:34px 12px;color:var(--sub);background:var(--paper);border:1px solid var(--line);border-radius:12px">
+      조건에 맞는 도감 카드가 아직 없어요.<br><b style="color:var(--ink)">📷 찍어 올리기</b>로 첫 장을 채워보세요!
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(e => `
+    <article class="card" data-id="${e.id}">
+      <div class="thumb">
+        <img src="${e.img}" alt="${e.name}" loading="lazy">
+        <span class="badge-sp">${e.species}</span>
+        <span class="badge-freq">${e.seenCount >= 5 ? '단골 ' : ''}${e.seenCount}회</span>
+      </div>
+      <div class="card-name"><span>${e.name}</span></div>
+      <div class="card-meta">${e.area} · ${e.color}</div>
+      <div class="card-tags">${(e.tags||[]).slice(0,3).map(t=>`<span>${t}</span>`).join('')}</div>
+    </article>
+  `).join('');
+}
+
+function openDetail(id) {
+  const e = entries.find(x => x.id === id);
+  if (!e) return;
+  const rel = e.seenCount >= 5 ? '동네 단골' : (e.seenCount >= 2 ? '안면 튼 사이' : '첫 만남');
+  document.getElementById('detailBody').innerHTML = `
+    <img class="modal-img" src="${e.img}" alt="${e.name}">
+    <div class="modal-head">
+      <h3>${e.name} <span style="font-size:12px;font-weight:700;color:var(--leaf);background:var(--leaf-soft);padding:2px 7px;border-radius:6px">${rel} · ${e.seenCount}회</span></h3>
+      <button class="close-x" id="closeModalBtn">닫기</button>
+    </div>
+    <p style="margin:4px 0 8px;font-size:13px;color:var(--sub)">${e.species} · ${e.color} · ${e.ear} · 목줄 ${e.collar} · <b>${e.area}</b> (${e.date})</p>
+    <p style="margin:0 0 10px;font-size:14px">${e.memo || '메모 없음'}</p>
+    <div class="card-tags" style="margin-bottom:10px">${(e.tags||[]).map(t=>`<span>${t}</span>`).join('')}</div>
+    <div class="action-stack">
+      <button class="btn-sun" style="margin-top:0" id="btnMeetAgain">🐾 오늘 또 만났어요 (+1회 기록)</button>
+      <button class="btn-outline" id="btnCopyShare">🔗 태그 · 도감 카드 텍스트 복사</button>
+      <a class="btn-3d" href="../meongnyang/">🗿 이 아이 3D 피규어로 소장하기 (멍냥공방 →)</a>
+    </div>
+  `;
+  document.getElementById('detailModal').classList.add('open');
+  document.getElementById('closeModalBtn').onclick = () => document.getElementById('detailModal').classList.remove('open');
+  document.getElementById('btnMeetAgain').onclick = () => {
+    e.seenCount = (e.seenCount || 1) + 1;
+    e.date = new Date().toISOString().slice(0,10);
+    saveEntries(); renderFeed(); openDetail(e.id);
+    showToast(`${e.name}와(과) ${e.seenCount}번째 만남 기록!`);
+  };
+  document.getElementById('btnCopyShare').onclick = async () => {
+    const txt = `[멍냥도감] ${e.area}에서 만난 '${e.name}' (${e.species} · ${e.color})\n${e.memo}\n${(e.tags||[]).join(' ')}\n👉 https://deskkit-studio.github.io/dogam/`;
+    try { await navigator.clipboard.writeText(txt); showToast('공유 문구 복사 완료!'); }
+    catch { showToast('복사 준비 완료: ' + e.name); }
+  };
+}
+
+// Export "내 도감 한 장 자랑하기" PNG card (position-safe: district only)
+function exportShareCard() {
+  const c = document.getElementById('shareCanvas');
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#E6ECF1'; ctx.fillRect(0, 0, 1080, 1350);
+  ctx.fillStyle = '#FFFFFF'; ctx.fillRect(54, 54, 972, 1242);
+  ctx.fillStyle = '#162036'; ctx.font = '800 54px sans-serif';
+  ctx.fillText('내 동네 멍냥도감', 106, 152);
+  ctx.fillStyle = '#566378'; ctx.font = '600 28px sans-serif';
+  const dogs = entries.filter(e=>e.species==='강아지').length;
+  const cats = entries.filter(e=>e.species==='고양이').length;
+  const birds = entries.filter(e=>e.species==='새').length;
+  ctx.fillText(`총 ${entries.length}마리 수집 · 강아지 ${dogs} · 고양이 ${cats} · 새 ${birds}`, 106, 206);
+  ctx.fillStyle = '#F4B400'; ctx.fillRect(106, 232, 180, 8);
+
+  entries.slice(0, 6).forEach((e, i) => {
+    const col = i % 2, row = Math.floor(i / 2);
+    const x = 106 + col * 448, y = 278 + row * 290;
+    ctx.fillStyle = '#F7F9FB'; ctx.fillRect(x, y, 420, 260);
+    ctx.strokeStyle = '#CFD8E2'; ctx.lineWidth = 2; ctx.strokeRect(x, y, 420, 260);
+    ctx.fillStyle = '#162036'; ctx.font = '800 32px sans-serif';
+    ctx.fillText(`${e.species==='강아지'?'🐶':e.species==='고양이'?'🐱':'🐦'} ${e.name}`, x + 22, y + 60);
+    ctx.fillStyle = '#566378'; ctx.font = '600 24px sans-serif';
+    ctx.fillText(`${e.area} · ${e.color}`, x + 22, y + 106);
+    ctx.fillText(`만남 ${e.seenCount}회 · ${(e.tags||[]).slice(0,2).join(' ')}`, x + 22, y + 150);
+    ctx.fillStyle = '#1C7450'; ctx.font = '700 22px sans-serif';
+    ctx.fillText((e.memo||'').slice(0, 22), x + 22, y + 206);
+  });
+
+  ctx.fillStyle = '#162036'; ctx.font = '700 24px sans-serif';
+  ctx.fillText('위치 보호(구/동만 표시) · deskkit-studio.github.io/dogam/', 106, 1244);
+
+  const a = document.createElement('a');
+  a.download = 'meongnyang-dogam-card.png';
+  a.href = c.toDataURL('image/png');
+  a.click();
+  showToast('내 도감 한 장 자랑 카드(PNG) 저장 완료!');
+}
+
+// AI Similarity Search for Missing Pets
+function runLostSearch() {
+  const sp = document.getElementById('lSpecies').value;
+  const col = document.getElementById('lColor').value;
+  const ear = document.getElementById('lEar').value;
+  const area = document.getElementById('lArea').value.trim();
+  const key = document.getElementById('lKey').value.trim().toLowerCase();
+
+  const pool = entries.filter(e => e.species === sp);
+  const scored = pool.map(e => {
+    let score = 35; // species match base
+    const reasons = [`${sp} 일치`];
+
+    if (lostImage.vec && e.vec) {
+      const sim = cosineSim(lostImage.vec, e.vec);
+      const pts = Math.round(sim * 35);
+      score += pts;
+      reasons.push(`사진 색상 유사도 ${Math.round(sim*100)}%`);
+    } else if (col !== '전체' && e.color === col) {
+      score += 30;
+    }
+
+    if (col !== '전체' && e.color === col) {
+      score += 14;
+      reasons.push(`털색(${col}) 일치`);
+    }
+    if (ear !== '전체' && e.ear === ear) {
+      score += 10;
+      reasons.push(`${ear} 일치`);
+    }
+    if (area && e.area.includes(area)) {
+      score += 12;
+      reasons.push(`같은 동네(${e.area})`);
+    }
+    if (key) {
+      const hay = [e.name, e.memo, ...(e.tags||[])].join(' ').toLowerCase();
+      const hits = key.split(/[\s,]+/).filter(k => k && hay.includes(k));
+      if (hits.length) {
+        score += Math.min(14, hits.length * 7);
+        reasons.push(`특징 '${hits[0]}' 일치`);
+      }
+    }
+    return { entry: e, pct: Math.min(99, Math.max(25, score)), reasons };
+  }).sort((a,b) => b.pct - a.pct);
+
+  const wrap = document.getElementById('lostResultsWrap');
+  wrap.style.display = 'block';
+  document.getElementById('lostResultTitle').textContent = `동네 도감 DB에서 좁힌 후보 ${scored.length}마리`;
+  document.getElementById('lostResults').innerHTML = scored.map(({entry:e, pct, reasons}) => `
+    <div class="match-card" data-id="${e.id}">
+      <img src="${e.img}" alt="${e.name}">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:6px">
+          <strong style="font-size:15px">${e.name}</strong>
+          <span class="score-pill ${pct>=75?'high':''}">유사도 ${pct}%</span>
+        </div>
+        <div style="font-size:12px;color:var(--sub);margin-top:2px">${e.area} · ${e.date} 목격 (${e.seenCount}회)</div>
+        <div style="font-size:12.5px;margin-top:4px">${e.memo}</div>
+        <div class="reasons">${reasons.map(r=>`<span>${r}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Event Wiring
+document.querySelectorAll('nav.tabbar button').forEach(btn => {
+  btn.onclick = () => {
+    const v = btn.dataset.view;
+    document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
+    document.getElementById('view-' + v).classList.add('active');
+    window.scrollTo(0, 0);
+  };
+});
+
+document.getElementById('catTabs').onclick = (ev) => {
+  const b = ev.target.closest('button[data-cat]');
+  if (!b) return;
+  state.cat = b.dataset.cat;
+  document.querySelectorAll('#catTabs button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  renderFeed();
+};
+
+document.getElementById('tagBar').onclick = (ev) => {
+  const b = ev.target.closest('button[data-tag]');
+  if (!b) return;
+  state.tag = (state.tag === b.dataset.tag) ? '' : b.dataset.tag;
+  renderFeed();
+};
+
+document.getElementById('qInput').oninput = (ev) => { state.q = ev.target.value; renderFeed(); };
+document.getElementById('areaFilter').onchange = (ev) => { state.area = ev.target.value; renderFeed(); };
+document.getElementById('cardGrid').onclick = (ev) => {
+  const c = ev.target.closest('.card[data-id]');
+  if (c) openDetail(c.dataset.id);
+};
+document.getElementById('lostResults').onclick = (ev) => {
+  const c = ev.target.closest('.match-card[data-id]');
+  if (c) openDetail(c.dataset.id);
+};
+document.getElementById('detailModal').onclick = (ev) => {
+  if (ev.target.id === 'detailModal') ev.target.classList.remove('open');
+};
+document.getElementById('btnShareBook').onclick = exportShareCard;
+
+document.getElementById('addFile').onchange = async (ev) => {
+  const file = ev.target.files?.[0];
+  if (!file) return;
+  const res = await analyzeImageFile(file);
+  addImage = res;
+  const p = document.getElementById('addPreview');
+  p.src = res.dataUrl; p.style.display = 'block';
+  document.getElementById('addPlaceholder').style.display = 'none';
+  document.getElementById('fColor').value = res.guessedColor;
+  document.getElementById('addAiText').textContent = `AI 색상 자동 추정: ${res.guessedColor}`;
+  document.getElementById('addSwatches').innerHTML = res.palette.map(h=>`<span class="sw" style="background:${h}"></span>`).join('');
+  document.getElementById('addAiChip').classList.add('show');
+};
+
+document.getElementById('lostFile').onchange = async (ev) => {
+  const file = ev.target.files?.[0];
+  if (!file) return;
+  const res = await analyzeImageFile(file);
+  lostImage = res;
+  const p = document.getElementById('lostPreview');
+  p.src = res.dataUrl; p.style.display = 'block';
+  document.getElementById('lostPlaceholder').style.display = 'none';
+  if (res.guessedColor !== '화려한색') document.getElementById('lColor').value = res.guessedColor;
+  document.getElementById('lostAiText').textContent = `사진 시각 벡터 추출 완료 (${res.guessedColor})`;
+  document.getElementById('lostSwatches').innerHTML = res.palette.map(h=>`<span class="sw" style="background:${h}"></span>`).join('');
+  document.getElementById('lostAiChip').classList.add('show');
+};
+
+document.getElementById('btnSaveEntry').onclick = () => {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { showToast('별명이나 종 이름을 적어주세요!'); return; }
+  const species = document.getElementById('fSpecies').value;
+  const color = document.getElementById('fColor').value;
+  const ear = document.getElementById('fEar').value;
+  const collar = document.getElementById('fCollar').value;
+  const area = document.getElementById('fArea').value.trim() || '우리 동네';
+  const memo = document.getElementById('fMemo').value.trim();
+  const rawTags = document.getElementById('fTags').value.trim();
+  const tags = rawTags
+    ? rawTags.split(/[\s,]+/).filter(Boolean).map(t => t.startsWith('#') ? t : '#' + t)
+    : ['#' + species, '#' + area.replace(/\s+/g,'')];
+
+  const emoji = species==='강아지'?'🐶':species==='고양이'?'🐱':species==='새'?'🐦':'🐿️';
+  const img = addImage.dataUrl || svgCardData('#E6ECF1','#B8C7D9', emoji, `${name} · ${area}`, '#F4B400');
+
+  entries.unshift({
+    id: 'user-' + Date.now(),
+    name, species, color, ear, collar, area, tags, memo,
+    seenCount: 1,
+    date: new Date().toISOString().slice(0,10),
+    img,
+    vec: addImage.vec || [0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],
+    palette: addImage.palette || []
+  });
+  saveEntries();
+
+  // Reset form & switch to feed
+  document.getElementById('fName').value = '';
+  document.getElementById('fTags').value = '';
+  document.getElementById('fMemo').value = '';
+  addImage = { dataUrl: '', vec: null, palette: [] };
+  document.getElementById('addPreview').style.display = 'none';
+  document.getElementById('addPlaceholder').style.display = 'block';
+  document.getElementById('addAiChip').classList.remove('show');
+
+  document.querySelector('nav.tabbar button[data-view="feed"]').click();
+  renderFeed();
+  showToast(`'${name}' 도감에 저장 완료!`);
+};
+
+document.getElementById('btnRunSearch').onclick = runLostSearch;
+document.getElementById('btnMakePoster').onclick = () => {
+  const sp = document.getElementById('lSpecies').value;
+  const col = document.getElementById('lColor').value;
+  const area = document.getElementById('lArea').value.trim() || '지역 미입력';
+  const key = document.getElementById('lKey').value.trim() || '특징 확인 중';
+  const txt = `🚨 [실종 ${sp} 찾습니다]\n- 지역: ${area}\n- 털색/특징: ${col} / ${key}\n- 동네 목격 제보(멍냥도감): https://deskkit-studio.github.io/dogam/`;
+  navigator.clipboard?.writeText(txt).then(()=>showToast('실종 제보 공유 문구 복사 완료!')).catch(()=>showToast('실종 문구 준비 완료'));
+};
+
+renderFeed();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "멍냥도감 — 동네 동물 도감 & 유기동물 AI 찾기",
+  "short_name": "멍냥도감",
+  "description": "산책하다 만난 강아지·고양이·새를 찍어 도감을 채우고 태그로 공유하세요. 실종 시 AI 유사도로 동네 도감에서 닮은 아이를 좁혀 찾습니다.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#E6ECF1",
+  "theme_color": "#162036",
+  "lang": "ko"
+}
