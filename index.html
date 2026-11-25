@@ -1195,7 +1195,7 @@
                     <label class="field-label" for="stay-adr" data-i18n="stay_adr">평균 1박 요금 (ADR)</label>
                     <div class="input-wrap">
                       <input type="number" id="stay-adr" class="input-control" value="135000" step="5000" min="0" />
-                      <span class="input-unit" data-i18n="unit_won">원</span>
+                      <span class="input-unit" data-i18n="unit_stay_money">원</span>
                     </div>
                   </div>
                   <div class="field-group">
@@ -1216,14 +1216,14 @@
                     <label class="field-label" for="stay-clean" data-i18n="stay_clean">건당 청소·세탁비</label>
                     <div class="input-wrap">
                       <input type="number" id="stay-clean" class="input-control" value="45000" step="5000" min="0" />
-                      <span class="input-unit" data-i18n="unit_won">원</span>
+                      <span class="input-unit" data-i18n="unit_stay_money">원</span>
                     </div>
                   </div>
                   <div class="field-group full">
                     <label class="field-label" for="stay-fixed" data-i18n="stay_fixed">월 고정비 합계 (임대료·공과금·인터넷)</label>
                     <div class="input-wrap">
                       <input type="number" id="stay-fixed" class="input-control" value="2400000" step="100000" min="0" />
-                      <span class="input-unit" data-i18n="unit_won">원</span>
+                      <span class="input-unit" data-i18n="unit_stay_money">원</span>
                     </div>
                   </div>
                 </div>
@@ -1347,10 +1347,10 @@
               <span class="zoom-hint" data-i18n="zoom_hint">클릭해서 크게 보기</span>
             </div>
             <div class="gallery-tabs" id="stay-gallery-tabs">
-              <button type="button" class="gallery-tab active emerald" data-img="assets/staydesk-ops.png" data-i18n="stay_tab_1">청소·운영 보드</button>
-              <button type="button" class="gallery-tab emerald" data-img="assets/staydesk-guide.png" data-i18n="stay_tab_2">4개국어 안내·PDF</button>
-              <button type="button" class="gallery-tab emerald" data-img="assets/staydesk-settlement.png" data-i18n="stay_tab_3">월말 정산·순수익</button>
-              <button type="button" class="gallery-tab emerald" data-img="assets/staydesk-inventory.png" data-i18n="stay_tab_4">비품·에어커버</button>
+              <button type="button" class="gallery-tab active emerald" data-img-ko="assets/staydesk-ops.png" data-img-en="assets/staydesk-ops-en.png" data-i18n="stay_tab_1">청소·운영 보드</button>
+              <button type="button" class="gallery-tab emerald" data-img-ko="assets/staydesk-guide.png" data-img-en="assets/staydesk-guide-en.png" data-i18n="stay_tab_2">4개국어 안내·PDF</button>
+              <button type="button" class="gallery-tab emerald" data-img-ko="assets/staydesk-settlement.png" data-img-en="assets/staydesk-settlement-en.png" data-i18n="stay_tab_3">월말 정산·순수익</button>
+              <button type="button" class="gallery-tab emerald" data-img-ko="assets/staydesk-inventory.png" data-img-en="assets/staydesk-inventory-en.png" data-i18n="stay_tab_4">비품·에어커버</button>
             </div>
           </div>
         </div>
@@ -1464,6 +1464,7 @@
       solodeskKmongUrl: '',
       solodeskGumroadUrl: '',
       staydeskKmongUrl: '',
+      staydeskGumroadUrl: '',
       staydeskTeamUrl: ''
     };
 
@@ -1601,6 +1602,7 @@
         m_vat_incl: '부가세 10% 포함',
         m_vat_incl_s: '합계금액 → 공급가/부가세',
         unit_won: '원',
+        unit_stay_money: '원',
         unit_rooms: '개',
         unit_cases: '건',
         unit_nights: '박',
@@ -1713,6 +1715,7 @@
         m_vat_incl: 'VAT 10% Inclusive',
         m_vat_incl_s: 'Total → Subtotal & VAT',
         unit_won: 'KRW',
+        unit_stay_money: 'USD',
         unit_rooms: 'units',
         unit_cases: 'stays',
         unit_nights: 'nights',
@@ -1732,9 +1735,9 @@
         stay_brief_hint: 'Try a ready-to-paste cleaning dispatch brief for your team',
         stay_copy_brief: 'Copy Brief',
         stay_note: '※ Estimates only. Actual profit varies with seasonal pricing, consumables, and taxes.',
-        funnel_stay_title: 'Want daily turnover boards, 4-language guest guides & monthly cleaning PDFs in one app?',
-        funnel_stay_sub: 'StayDesk Pro v1.0 cuts daily host & cleaning coordination down to 3 minutes.',
-        funnel_stay_cta: 'View StayDesk Pro (₩29,000) →',
+        funnel_stay_title: 'Want daily turnover boards, 4-language guest guides &amp; monthly cleaner payout PDFs in one app?',
+        funnel_stay_sub: 'StayDesk Pro v1.0 cuts daily host &amp; cleaning coordination down to 3 minutes.',
+        funnel_stay_cta: 'View StayDesk Pro ($24) →',
         zoom_hint: 'Click to enlarge',
         solo_tab_1: 'Dashboard & Receivables',
         solo_tab_2: 'A4 Invoice Builder',
@@ -1752,19 +1755,19 @@
         solo_price_sub: 'Save $200+/yr vs monthly invoicing SaaS · Includes both EN & KR modes + PDF quick-start guides',
         solo_cta_kr: 'Korea Launch (₩19,000)',
         solo_cta_en: 'Get on Gumroad ($19)',
-        stay_tag: 'PRODUCT 02 · STR HOSTS & CLEANING TEAMS',
-        stay_desc: 'Built for Airbnb hosts and turnover cleaning managers: daily dispatch board, 4-language guest check-in cards, monthly cleaning settlement PDFs, and per-unit P&L.',
-        stay_f1: '<strong>Daily Cleaning Board</strong>: Same-day turnaround alerts + 1-click chat dispatch brief copy',
-        stay_f2: '<strong>4-Language Check-in Guides (KR/EN/JP/CN)</strong> + printable A4 wall house manual PDF',
-        stay_f3: 'Auto-tallied completed cleanings → <strong>Monthly Cleaning Settlement A4 PDF & CSV</strong>',
-        stay_f4: '<strong>Per-Property P&amp;L Simulator</strong> factoring platform fees, cleaning cost & fixed rent',
-        stay_f5: '<strong>Low-stock supply restock list</strong> copy + AirCover damage claim report helper',
-        stay_price_now: '₩29,000',
-        stay_price_old: '₩39,000',
-        stay_price_badge: 'Host Launch Price · Lifetime',
-        stay_price_sub: 'STANDARD (Solo Host / Small Team) ₩29,000 · DELUXE (5-Seat Ops/Cleaning Team) ₩59,000',
-        stay_cta_std: 'Solo Host License (₩29,000)',
-        stay_cta_team: '5-Seat Team License (₩59,000)',
+        stay_tag: 'PRODUCT 02 · STR HOSTS &amp; CLEANING TEAMS',
+        stay_desc: 'Built for Airbnb/Vrbo hosts and turnover cleaning teams: same-day rush alerts, 1-click WhatsApp cleaner briefs, 4-language guest check-in guides, monthly payout PDFs &amp; multi-currency P&amp;L.',
+        stay_f1: '<strong>Daily Turnover Board</strong>: Tight same-day rush alerts (≤3h) + 1-click WhatsApp/SMS cleaner brief',
+        stay_f2: '<strong>4-Language Check-in Guides (EN/ES/FR/JA)</strong> + frame-ready A4 printable house manual PDF',
+        stay_f3: 'Auto-tallied verified cleanings → <strong>Monthly Cleaner Payout A4 PDF &amp; Bookkeeping CSV</strong>',
+        stay_f4: '<strong>Multi-Currency P&amp;L Simulator</strong> (USD/EUR/GBP/CAD/AUD/KRW) with true net profit &amp; margin',
+        stay_f5: '<strong>Par-level supply restock list</strong> copy + polite AirCover / Resolution Center damage claims',
+        stay_price_now: '$24',
+        stay_price_old: '$39',
+        stay_price_badge: 'Global Launch · Lifetime License',
+        stay_price_sub: 'Save $480+/yr vs monthly STR software · Early-bird $19 with code HOST19 · Korea edition ₩29,000',
+        stay_cta_std: 'Get on Gumroad ($24)',
+        stay_cta_team: '5-Seat Team / Korea Edition',
         stay_tab_1: 'Cleaning Ops Board',
         stay_tab_2: '4-Lang Guide & PDF',
         stay_tab_3: 'Settlement & P&L',
@@ -1803,12 +1806,19 @@
       lang: 'ko',
       taxMode: 'w33_fwd',
       taxAmount: 3000000,
+      stayDirty: false,
       lastKorText: '',
       modalCopyText: ''
     };
 
+    const STAY_PRESETS = {
+      ko: { rooms: 3, bookings: 10, adr: 135000, adrStep: 5000, nights: 2, fee: 15, clean: 45000, cleanStep: 5000, fixed: 2400000, fixedStep: 100000 },
+      en: { rooms: 3, bookings: 10, adr: 185, adrStep: 5, nights: 2, fee: 15, clean: 85, cleanStep: 5, fixed: 2200, fixedStep: 100 }
+    };
+
     const fmt = (n) => Math.round(Number(n) || 0).toLocaleString('ko-KR');
     const won = (n) => (state.lang === 'ko' ? fmt(n) + '원' : '₩' + fmt(n));
+    const stayMoney = (n) => (state.lang === 'ko' ? fmt(n) + '원' : '$' + fmt(n));
 
     function showToast(msg) {
       const el = document.getElementById('toast');
@@ -1910,7 +1920,7 @@
         : `Margin ${r.marginPct.toFixed(1)}%`;
 
       netEl.className = 'result-main-value' + (r.netProfit < 0 ? ' negative' : '');
-      netEl.innerHTML = `${won(r.netProfit)} <span class="${marginClass}">${marginLabel}</span>`;
+      netEl.innerHTML = `${stayMoney(r.netProfit)} <span class="${marginClass}">${marginLabel}</span>`;
 
       const beText = r.breakevenTotal === null
         ? (isKo ? '수익성 부족 (단가 조정 필요)' : 'Unprofitable per stay')
@@ -1919,11 +1929,11 @@
             : `${r.breakevenTotal} stays/mo (${r.breakevenPerRoom.toFixed(1)}/unit)`);
 
       const rows = [
-        [isKo ? `월 총매출 (총 ${r.totalBookings}건)` : `Gross Revenue (${r.totalBookings} stays)`, won(r.grossRevenue)],
-        [isKo ? `플랫폼 수수료 (${params.feeRate}%)` : `Platform Fees (${params.feeRate}%)`, '-' + won(r.platformFee)],
-        [isKo ? `월 총 청소·세탁비` : `Total Cleaning Costs`, '-' + won(r.cleaningCost)],
-        [isKo ? `월 고정비 합계` : `Monthly Fixed Costs`, '-' + won(r.fixedMonthly)],
-        [isKo ? `객실 1개당 월 순수익` : `Net Profit per Unit`, won(r.netPerRoom)],
+        [isKo ? `월 총매출 (총 ${r.totalBookings}건)` : `Gross Revenue (${r.totalBookings} stays)`, stayMoney(r.grossRevenue)],
+        [isKo ? `플랫폼 수수료 (${params.feeRate}%)` : `Platform Fees (${params.feeRate}%)`, '-' + stayMoney(r.platformFee)],
+        [isKo ? `월 총 청소·세탁비` : `Total Cleaning Costs`, '-' + stayMoney(r.cleaningCost)],
+        [isKo ? `월 고정비 합계` : `Monthly Fixed Costs`, '-' + stayMoney(r.fixedMonthly)],
+        [isKo ? `객실 1개당 월 순수익` : `Net Profit per Unit`, stayMoney(r.netPerRoom)],
         [isKo ? `손익분기 예약 건수` : `Breakeven Stays`, beText]
       ];
 
@@ -1951,11 +1961,34 @@
         chip.textContent = lang === 'en' ? chip.dataset.labelEn : chip.dataset.labelKo;
       });
 
-      // Update SoloDesk active screenshot for EN/KR
+      // Update SoloDesk & StayDesk active screenshots for EN/KR
       const activeSoloTab = document.querySelector('#solo-gallery-tabs .gallery-tab.active');
       if (activeSoloTab) {
         const imgUrl = lang === 'en' ? activeSoloTab.dataset.imgEn : activeSoloTab.dataset.imgKo;
         document.getElementById('solo-main-img').src = imgUrl;
+      }
+      const activeStayTab = document.querySelector('#stay-gallery-tabs .gallery-tab.active');
+      if (activeStayTab) {
+        const stayUrl = lang === 'en' ? activeStayTab.dataset.imgEn : activeStayTab.dataset.imgKo;
+        document.getElementById('stay-main-img').src = stayUrl;
+      }
+
+      // Sync realistic currency defaults for STR P&L calculator if user hasn't typed custom values
+      if (!state.stayDirty) {
+        const p = STAY_PRESETS[lang] || STAY_PRESETS.ko;
+        document.getElementById('stay-rooms').value = p.rooms;
+        document.getElementById('stay-bookings').value = p.bookings;
+        const adrEl = document.getElementById('stay-adr');
+        adrEl.value = p.adr;
+        adrEl.step = p.adrStep;
+        document.getElementById('stay-nights').value = p.nights;
+        document.getElementById('stay-fee').value = p.fee;
+        const cleanEl = document.getElementById('stay-clean');
+        cleanEl.value = p.clean;
+        cleanEl.step = p.cleanStep;
+        const fixedEl = document.getElementById('stay-fixed');
+        fixedEl.value = p.fixed;
+        fixedEl.step = p.fixedStep;
       }
 
       renderTax();
@@ -1968,7 +2001,7 @@
       const urlMap = {
         solodesk_kr: CONFIG.solodeskKmongUrl,
         solodesk_en: CONFIG.solodeskGumroadUrl,
-        staydesk_std: CONFIG.staydeskKmongUrl,
+        staydesk_std: isKo ? CONFIG.staydeskKmongUrl : CONFIG.staydeskGumroadUrl,
         staydesk_team: CONFIG.staydeskTeamUrl || CONFIG.staydeskKmongUrl
       };
       if (urlMap[sku]) {
@@ -1996,24 +2029,28 @@
           copy: '[Order Inquiry] SoloDesk Studio v1.0 — Global Lifetime License ($19)'
         },
         staydesk_std: {
-          title: isKo ? 'StayDesk Pro v1.0 — 호스트 런칭 특가 (₩29,000)' : 'StayDesk Pro v1.0 — Solo Host License',
+          title: isKo ? 'StayDesk Pro v1.0 — 호스트 런칭 특가 (₩29,000)' : 'StayDesk Pro v1.0 — Global Gumroad ($24)',
           desc: isKo
             ? '숙박 호스트·소규모 청소 매니저를 위한 런칭 특가(₩29,000, 평생 소장) 파일럿 배포가 진행 중입니다. 아래 문구를 복사해 전달하시면 설치 가이드 PDF와 함께 바로 보내드립니다.'
-            : 'Direct host launch is open at ₩29,000 (lifetime, zero subscription). Copy the request below to receive the ZIP kit immediately.',
+            : 'Global Gumroad checkout is completing payout verification ($24 lifetime — early-bird $19 with code HOST19). Copy this request to reserve your copy immediately.',
           spec: isKo
             ? '• 상품명: StayDesk Pro v1.0 STANDARD (1인 호스트/소규모 팀)\n• 가격: ₩29,000 (정가 ₩39,000 · 구독료 0원)\n• 구성: staydesk-pro.html + 한글 사용 가이드 PDF (ZIP)\n• 핵심: 청소 보드 · 카톡 지시서 · 4개국어 안내 · 정산서 PDF · P&L · 에어커버'
-            : '• Product: StayDesk Pro v1.0 STANDARD\n• Price: ₩29,000 (Lifetime)\n• Inside ZIP: staydesk-pro.html + Quick-Start Guide PDF',
-          copy: '[구매 문의] StayDesk Pro v1.0 STANDARD (호스트 런칭 특가 29,000원) 구매 희망합니다.'
+            : '• Product: StayDesk Pro v1.0 Global (EN/ES/FR/JA guest guides + Multi-currency)\n• Price: $24 one-time ($19 early-bird w/ code HOST19 · Zero subscriptions)\n• Inside ZIP: staydesk-pro-en.html + USER_GUIDE_EN.pdf\n• 100% offline local-first workspace (macOS / Windows / tablets)',
+          copy: isKo
+            ? '[구매 문의] StayDesk Pro v1.0 STANDARD (호스트 런칭 특가 29,000원) 구매 희망합니다.'
+            : '[Order Inquiry] StayDesk Pro v1.0 Global Lifetime License ($24 / Early-bird HOST19)'
         },
         staydesk_team: {
-          title: isKo ? 'StayDesk Pro v1.0 — 청소팀 5인 라이선스 (₩59,000)' : 'StayDesk Pro v1.0 — 5-Seat Team License',
+          title: isKo ? 'StayDesk Pro v1.0 — 청소팀 5인 라이선스 (₩59,000)' : 'StayDesk Pro v1.0 — 5-Seat Team / Korea Edition',
           desc: isKo
             ? '다객실 운영사 및 청소 대행팀(최대 5인 내부 공유 + v1.x 마이너 업데이트 포함) 전용 패키지입니다.'
-            : 'Designed for multi-unit operators & cleaning agencies (up to 5 internal seats + v1.x minor updates).',
+            : 'Designed for multi-unit operators & turnover cleaning agencies (up to 5 internal seats + v1.x updates). Korea KR edition (₩29,000 / ₩59,000) is also available.',
           spec: isKo
             ? '• 상품명: StayDesk Pro v1.0 DELUXE (팀 5인 라이선스)\n• 가격: ₩59,000 (구독료 0원 평생 소장)\n• 구성: staydesk-pro.html + 가이드 PDF + 5인 내부 사용권 + v1.x 업데이트'
-            : '• Product: StayDesk Pro v1.0 DELUXE (5-Seat Team)\n• Price: ₩59,000 (Lifetime + v1.x updates)',
-          copy: '[구매 문의] StayDesk Pro v1.0 DELUXE (청소팀 5인 라이선스 59,000원) 구매 희망합니다.'
+            : '• Product: StayDesk Pro v1.0 Team 5-Seat License (EN or KR)\n• Price: $49 Global / ₩59,000 Korea (Lifetime + v1.x minor updates)\n• Inside ZIP: Complete offline HTML app + PDF Quick-Start Guide',
+          copy: isKo
+            ? '[구매 문의] StayDesk Pro v1.0 DELUXE (청소팀 5인 라이선스 59,000원) 구매 희망합니다.'
+            : '[Order Inquiry] StayDesk Pro v1.0 5-Seat Cleaning Team License'
         }
       };
 
@@ -2084,16 +2121,19 @@
     });
 
     ['stay-rooms', 'stay-bookings', 'stay-adr', 'stay-nights', 'stay-fee', 'stay-clean', 'stay-fixed'].forEach((id) => {
-      document.getElementById(id).addEventListener('input', renderStay);
+      document.getElementById(id).addEventListener('input', () => {
+        state.stayDirty = true;
+        renderStay();
+      });
     });
 
     document.getElementById('btn-copy-brief').addEventListener('click', () => {
       const rooms = document.getElementById('stay-rooms').value || '3';
-      const clean = fmt(document.getElementById('stay-clean').value || 45000);
+      const cleanVal = document.getElementById('stay-clean').value || (state.lang === 'ko' ? 45000 : 85);
       const brief = state.lang === 'ko'
-        ? `[오늘의 청소 지시서 — StayDesk 샘플]\n• 담당 객실: 총 ${rooms}개 중 당일 턴어라운드 1건 (11:00 퇴실 → 15:00 입실 ⚡긴급)\n• 체크리스트: 침구 전면 교체 / 욕실 배수구 확인 / 어메니티 리필 / 도어락 비번 변경\n• 정산 단가: 건당 ${clean}원 (완료 후 사진 3장 공유 부탁드립니다!)`
-        : `[Cleaning Dispatch Brief — StayDesk Sample]\n• Active Units: ${rooms} | Priority Same-Day Turnover (11:00 Out → 15:00 In)\n• Checklist: Fresh linens / Bathroom check / Refill amenities / Rotate smart lock PIN\n• Rate: ₩${clean} per stay (Please share 3 completion photos!)`;
-      copyText(brief, state.lang === 'ko' ? '카톡 청소 지시서 샘플이 복사되었습니다!' : 'Sample cleaning brief copied!');
+        ? `[오늘의 청소 지시서 — StayDesk 샘플]\n• 담당 객실: 총 ${rooms}개 중 당일 턴어라운드 1건 (11:00 퇴실 → 15:00 입실 ⚡긴급)\n• 체크리스트: 침구 전면 교체 / 욕실 배수구 확인 / 어메니티 리필 / 도어락 비번 변경\n• 정산 단가: 건당 ${fmt(cleanVal)}원 (완료 후 사진 3장 공유 부탁드립니다!)`
+        : `[Cleaning Dispatch Brief — StayDesk Sample]\n• Active Units: ${rooms} | ⚡ Priority Same-Day Turnover (11:00 AM Out → 2:00 PM In)\n• Checklist: Fresh linens & beds / Bathroom check / Refill amenities / Rotate smart lock PIN\n• Payout Rate: $${fmt(cleanVal)} per turnover (Please share 4 completion photos!)`;
+      copyText(brief, state.lang === 'ko' ? '카톡 청소 지시서 샘플이 복사되었습니다!' : 'WhatsApp/SMS cleaning brief copied!');
     });
 
     // Gallery switchers
@@ -2109,7 +2149,7 @@
       tab.addEventListener('click', () => {
         document.querySelectorAll('#stay-gallery-tabs .gallery-tab').forEach((t) => t.classList.remove('active'));
         tab.classList.add('active');
-        document.getElementById('stay-main-img').src = tab.dataset.img;
+        document.getElementById('stay-main-img').src = state.lang === 'en' ? tab.dataset.imgEn : tab.dataset.imgKo;
       });
     });
 
