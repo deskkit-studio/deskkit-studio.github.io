@@ -1598,8 +1598,8 @@
     function openUnlockModal(product) {
       const isKo = state.lang === 'ko';
       const liveUrl = product === 'staydesk'
-        ? (isKo ? CONFIG.staydeskKmongUrl : CONFIG.staydeskGumroadUrl)
-        : (isKo ? CONFIG.solodeskKmongUrl : CONFIG.solodeskGumroadUrl);
+        ? (isKo ? (CONFIG.staydeskKmongUrl || CONFIG.staydeskGumroadUrl) : CONFIG.staydeskGumroadUrl)
+        : (isKo ? (CONFIG.solodeskKmongUrl || CONFIG.solodeskGumroadUrl) : CONFIG.solodeskGumroadUrl);
       if (liveUrl) {
         window.open(liveUrl, '_blank', 'noopener,noreferrer');
         return;

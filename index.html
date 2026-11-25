@@ -2150,10 +2150,10 @@
     function openPurchaseModal(sku) {
       const isKo = state.lang === 'ko';
       const urlMap = {
-        solodesk_kr: CONFIG.solodeskKmongUrl,
+        solodesk_kr: CONFIG.solodeskKmongUrl || CONFIG.solodeskGumroadUrl,
         solodesk_en: CONFIG.solodeskGumroadUrl,
-        staydesk_std: isKo ? CONFIG.staydeskKmongUrl : CONFIG.staydeskGumroadUrl,
-        staydesk_team: CONFIG.staydeskTeamUrl || CONFIG.staydeskKmongUrl
+        staydesk_std: isKo ? (CONFIG.staydeskKmongUrl || CONFIG.staydeskGumroadUrl) : CONFIG.staydeskGumroadUrl,
+        staydesk_team: CONFIG.staydeskTeamUrl || CONFIG.staydeskKmongUrl || CONFIG.staydeskGumroadUrl
       };
       if (urlMap[sku]) {
         window.open(urlMap[sku], '_blank', 'noopener,noreferrer');
