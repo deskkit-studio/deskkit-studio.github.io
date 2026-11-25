@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>멍냥공방 맛보기 5판</title>
+<script>/* 검사용: 화면에서 난 오류를 모아 둔다(check.html 이 읽음) */
+window.__errs=[];addEventListener('error',e=>__errs.push(String(e.message||e.type)+(e.target&&e.target.src?' '+e.target.src:'')),true);addEventListener('unhandledrejection',e=>__errs.push('rejection: '+(e.reason&&e.reason.message||e.reason)));(function(){const ce=console.error;console.error=function(){__errs.push([].join.call(arguments,' '));ce.apply(console,arguments)}})();</script>
+<style>
+:root{
+  --bg:#F6F0E6; --card:#FFFDF9; --ink:#3A2E26; --sub:#7C6A5C; --line:#E6D9C7;
+  --wood:#B7895A; --wood-d:#8C6440; --accent:#D9774B; --ok:#5E8B63; --warn:#B4572E;
+  --r:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#E9E1D4;color:var(--ink);font-family:-apple-system,"Apple SD Gothic Neo","Pretendard",sans-serif}
+.app{word-break:keep-all;overflow-wrap:anywhere;max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:130px}
+header{display:flex;align-items:center;gap:8px;padding:14px 16px 6px}
+header .logo{font-weight:800;font-size:18px;letter-spacing:-.3px}
+header .logo span{color:var(--accent)}
+header .step{margin-left:auto;font-size:12px;color:var(--sub)}
+.screen{display:none;padding:8px 16px 16px}
+.screen.on{display:block}
+@keyframes in{from{transform:translateY(6px)}to{transform:none}}
+h1{font-size:24px;line-height:1.3;margin:10px 0 6px;letter-spacing:-.5px}
+h2{font-size:19px;margin:8px 0 4px;letter-spacing:-.3px}
+p.lead{color:var(--sub);font-size:14px;line-height:1.55;margin:4px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:10px 0}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:16px;font-weight:700;background:var(--accent);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.4}
+.bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:430px;padding:12px 16px 18px;background:linear-gradient(transparent,var(--bg) 30%)}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:#FCE7D8;color:var(--warn);border:1px dashed var(--warn)}
+.muted{color:var(--sub);font-size:12px;line-height:1.5}
+.trio{display:grid;grid-template-columns:1fr 18px 1fr 18px 1fr;align-items:center;gap:2px;margin:12px 0}
+.trio .cell{background:var(--card);border:1px solid var(--line);border-radius:12px;aspect-ratio:3/4;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.trio .cell img,.trio .cell svg{width:100%;height:100%;object-fit:cover}
+.trio .cap{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:11px;font-weight:700;background:rgba(255,253,249,.85)}
+.trio .arrow{text-align:center;color:var(--wood);font-weight:800}
+.drop{border:2px dashed var(--wood);border-radius:var(--r);padding:22px;text-align:center;background:var(--card);cursor:pointer}
+.drop img{max-width:100%;max-height:260px;border-radius:12px}
+label.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin:10px 0;line-height:1.45}
+.group{margin:12px 0}
+.group .t{font-size:13px;font-weight:700;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:8px 12px;font-size:14px;cursor:pointer;user-select:none}
+.chip.on{border-color:var(--wood);background:#F1E2CF;font-weight:700}
+.chip .star{color:#ccc;margin-left:4px}
+.chip.must .star{color:var(--accent)}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--line);cursor:pointer}
+.sw.on{box-shadow:0 0 0 2.5px var(--accent)}
+.mini{display:flex;gap:10px;align-items:center}
+.mini img{width:64px;height:64px;object-fit:cover;border-radius:12px}
+.must-bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.must-bar span{background:#FBE3D5;color:var(--warn);font-size:12px;font-weight:700;padding:4px 9px;border-radius:99px}
+.making{text-align:center;padding:40px 0}
+.making .pot{width:120px;height:120px;margin:0 auto 16px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#EAD7BE);display:flex;align-items:center;justify-content:center;font-size:44px;animation:bob 1.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
+.making li{list-style:none;padding:6px 0;color:var(--sub);font-size:14px}
+.making li.done{color:var(--ok);font-weight:700}
+.making li.done::before{content:"✓ "}
+.compare{position:relative;aspect-ratio:1/1;border-radius:var(--r);overflow:hidden;background:#F3E9DA;border:1px solid var(--line)}
+.compare img,.compare .art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.compare .art{clip-path:inset(0 0 0 var(--cut,50%));background:#FBF4EA}
+.compare .art svg{width:100%;height:100%;display:block;padding:18px}
+.compare .bar{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.3)}
+.compare .l,.compare .r{position:absolute;top:8px;font-size:11px;font-weight:700;background:rgba(255,255,255,.85);padding:2px 7px;border-radius:99px}
+.compare .l{left:8px}.compare .r{right:8px}
+input[type=range]{width:100%}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:6px -16px 0;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.tab{flex:none;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:700;cursor:pointer;text-align:center}
+.tab small{display:block;font-weight:500;color:var(--sub);font-size:11px}
+.tab.on{border-color:var(--accent);background:#FBE9DF}
+.mock{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-top:10px;position:relative}
+.mock .stage{height:300px;border-radius:12px;background:linear-gradient(#F7EFE3,#EADBC6);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+#three{width:100%;height:100%;touch-action:none;cursor:grab}
+.price{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.price b{font-size:22px}
+.opt{display:flex;gap:6px;margin-top:8px}
+.opt .chip{flex:1;text-align:center}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}
+.kv div:nth-child(odd){color:var(--sub)}
+.sum li{margin:6px 0;font-size:14px}
+.toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);background:var(--ink);color:#fff;padding:16px 18px;border-radius:14px;font-size:14px;line-height:1.5;max-width:320px;display:none;z-index:9;text-align:center}
+.slot{display:flex;gap:4px;margin-top:4px}
+.slot i{width:18px;height:8px;border-radius:4px;background:var(--wood)}
+.slot i.off{background:var(--line)}
+.hint{font-size:12px;color:var(--sub);text-align:center;margin-top:6px}
+
+/* ── 2판에서 온 것 ── */
+.ver{font-size:10px;font-weight:800;color:var(--wood-d);border:1.5px solid var(--wood);border-radius:99px;padding:1px 7px;letter-spacing:.3px}
+input.txt{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--line);font-size:16px;background:var(--card);color:var(--ink);font-family:inherit}
+.qtop{display:grid;grid-template-columns:1fr 20px 1fr;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px}
+.qtop .ph,.qtop .lv{height:112px;border-radius:12px;overflow:hidden;position:relative}
+.qtop .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block}
+.qtop .lv{background:#FBF4EA;display:flex;align-items:center;justify-content:center}
+.qtop .lv svg{height:108px;width:auto}
+.qtop .arrow{text-align:center;color:var(--wood);font-weight:800}
+.qtop .cap{position:absolute;left:6px;top:6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.85);padding:1px 6px;border-radius:99px}
+.qdots{display:flex;gap:6px;margin:12px 0 2px}
+.qdot{flex:1;text-align:center;font-size:12px;font-weight:700;color:var(--sub);padding:8px 2px;border-radius:99px;background:#EDE3D3;cursor:pointer;white-space:nowrap}
+.qdot.on{background:var(--accent);color:#fff}
+.qdot.done{background:#DDE9DC;color:var(--ok)}
+.qpane{display:none}.qpane.on{display:block}
+.qpane h2{margin-top:12px}
+.pick2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.pk{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:8px 8px 12px;text-align:center;cursor:pointer;font-weight:700;font-size:15px;user-select:none}
+.pk.on{border-color:var(--accent);background:#FBE9DF}
+.pk svg{width:100%;height:132px;display:block;margin-bottom:4px}
+.pk small{display:block;font-weight:500;color:var(--sub);font-size:11.5px;margin-top:2px}
+details.fold{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin:12px 0;padding:0 14px}
+details.fold summary{list-style:none;cursor:pointer;padding:14px 0;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold summary small{font-weight:500;color:var(--sub);font-size:11.5px}
+details.fold summary::after{content:"+";margin-left:auto;color:var(--wood-d);font-size:20px;font-weight:500;line-height:1}
+details.fold[open] summary::after{content:"\2212"}
+details.fold[open]{padding-bottom:10px}
+.half{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:12px;overflow:hidden;background:var(--line)}
+.half .hp{position:relative;aspect-ratio:3/4;background:#FBF4EA;overflow:hidden}
+.half .hp img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block}
+.half .hp .art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px}
+.half .hp .art svg{width:100%;height:100%}
+.half .hp span{position:absolute;top:8px;left:8px;font-size:11px;font-weight:700;background:rgba(255,255,255,.88);padding:2px 8px;border-radius:99px}
+.seg{display:inline-flex;background:#EDE3D3;border-radius:99px;padding:3px;font-size:12px;font-weight:700}
+.seg div{padding:5px 12px;border-radius:99px;cursor:pointer;color:var(--sub)}
+.seg div.on{background:var(--card);color:var(--ink)}
+.rowh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.stage{border-radius:12px;background:linear-gradient(#F7EFE3,#EADBC6);overflow:hidden;position:relative}
+.stage canvas{width:100%;height:100%;touch-action:pan-y;cursor:grab;display:block}
+.ang{display:flex;gap:6px;margin-top:8px}
+.ang .chip{flex:1;text-align:center;font-weight:700}
+.anchor{display:flex;align-items:center;gap:8px;border:1.5px dashed #D8C8B2;border-radius:12px;padding:9px 12px;font-size:12.5px;color:var(--sub);background:rgba(255,253,249,.55);margin-top:8px}
+.anchor b{color:var(--ink);font-size:14px}
+.anchor .soon{margin-left:auto;font-size:11px;font-weight:700;background:#EDE3D3;border-radius:99px;padding:3px 8px;white-space:nowrap}
+.tier{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:12px;margin-top:10px;cursor:pointer;position:relative}
+.tier.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(217,119,75,.16)}
+.tier .tn{font-size:11px;font-weight:800;color:var(--wood-d);letter-spacing:.5px}
+.tier h3{margin:2px 26px 2px 0;font-size:15px;letter-spacing:-.3px}
+.tier .pr{font-size:18px;font-weight:800;margin-top:6px}
+.tier .pr small{font-size:11px;font-weight:500;color:var(--sub)}
+.tier .radio{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:#fff}
+.tier.on .radio{border-color:var(--accent);background:radial-gradient(var(--accent) 46%,#fff 52%)}
+.tier.hero{padding:14px}
+.tier.hero .tn{display:inline-block;background:var(--accent);color:#fff;border-radius:99px;padding:3px 10px;font-size:12px}
+.tier.hero h3{font-size:20px;margin-top:8px}
+.tier.hero .pr{font-size:28px}
+.tier.hero .stage{height:230px;margin-top:10px}
+.tier ul{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.6}
+.tier .thumb{height:104px;border-radius:12px;background:linear-gradient(#F7EFE3,#EADBC6);display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 6px;overflow:hidden}
+.tier2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.arrive{background:#EEF4EC;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:15px;font-weight:800;color:#2F5B36}
+.arrive small{display:block;font-weight:500;font-size:11.5px;color:#55705A;margin-top:2px;line-height:1.45}
+.sizecap{display:flex;justify-content:space-between;white-space:nowrap;font-size:11px;color:var(--sub);margin-top:5px;gap:8px}
+.realslot{border:1.5px dashed #D8C8B2;border-radius:12px;padding:12px;text-align:center;font-size:12px;color:var(--sub);margin-top:10px;background:rgba(246,240,230,.6)}
+.ladder{background:#FBF1E4;border-radius:12px;padding:11px 12px;font-size:13px;line-height:1.55;margin:12px 0 8px}
+.flow{list-style:none;margin:8px 0 0;padding:0;counter-reset:f}
+.flow li{position:relative;padding:1px 0 14px 34px;font-size:14px;line-height:1.45;counter-increment:f}
+.flow li::before{content:counter(f);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:#EDE3D3;color:var(--wood-d);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.flow li::after{content:"";position:absolute;left:11px;top:27px;bottom:3px;width:2px;background:var(--line)}
+.flow li:last-child::after{display:none}.flow li:last-child{padding-bottom:0}
+.flow li.key::before{background:var(--accent);color:#fff}
+.flow small{display:block;color:var(--sub);font-size:12px}
+.cancel{background:#EEF4EC;color:#2F5B36;border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:700;margin-top:12px}
+.safe{border-left:3px solid var(--wood);padding:4px 0 4px 10px;font-size:12.5px;line-height:1.55;color:var(--ink);margin:12px 0}
+.testbar{background:#FCE7D8;border:1px dashed var(--warn);color:var(--warn);font-weight:800;font-size:13px;border-radius:12px;padding:9px 12px;text-align:center;margin-top:4px}
+.prog{display:grid;grid-template-columns:repeat(4,1fr);margin:14px 0 8px}
+.prog .p{text-align:center;font-size:12px;color:var(--sub);position:relative}
+.prog .p i{display:block;width:28px;height:28px;border-radius:50%;margin:0 auto 5px;background:#EDE3D3;color:var(--wood-d);font-style:normal;font-weight:800;font-size:12px;line-height:28px;position:relative;z-index:1}
+.prog .p::before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:3px;background:var(--line)}
+.prog .p:first-child::before{display:none}
+.prog .p.now{color:var(--ink);font-weight:800}
+.prog .p.now i{background:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(217,119,75,.22)}
+.prog .p.done i{background:var(--ok);color:#fff}
+.btn.sm{padding:13px;font-size:15px}
+
+/* ── 3판 ── */
+.hero3{position:relative;border-radius:var(--r);overflow:hidden;background:linear-gradient(#F7EFE3,#EADBC6);border:1px solid var(--line);height:264px;margin:12px 0 6px}
+.hero3 canvas{width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
+.tag{position:absolute;font-size:11px;font-weight:700;background:rgba(255,255,255,.9);padding:3px 8px;border-radius:99px;white-space:nowrap;z-index:1}
+.tag.warn{background:#FCE7D8;color:var(--warn);border:1px dashed var(--warn)}
+.pill{display:inline-block;font-size:12px;font-weight:800;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.pill.open{background:#DDE9DC;color:#2F5B36}.pill.rest{background:#EDE3D3;color:var(--wood-d)}.pill.pub{background:#FBE3D5;color:var(--warn)}
+.filgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px 2px;margin-top:6px}
+.fil{text-align:center;font-size:10.5px;color:var(--sub);cursor:pointer;user-select:none;white-space:nowrap}
+.fil i{display:block;width:32px;height:32px;border-radius:50%;margin:0 auto 3px;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--line)}
+.fil.on{color:var(--ink);font-weight:800}.fil.on i{box-shadow:0 0 0 2.5px var(--accent)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:3px;border:1px solid rgba(0,0,0,.2)}
+.limit{border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;margin-top:10px}
+.limit.no{background:#FCE7D8;border:1px dashed var(--warn);color:#7A3A1C}
+.limit.info{background:#FBF1E4}
+.limit.ok{background:#EEF4EC;color:#2F5B36;font-weight:700}
+.limit ul{margin:4px 0 0;padding-left:18px}
+.soonrow{display:flex;align-items:center;gap:10px;border:1.5px dashed #D8C8B2;border-radius:12px;padding:10px 12px;margin-top:8px;background:rgba(255,253,249,.55)}
+.soonrow .tx{flex:1;font-size:12.5px;color:var(--sub);line-height:1.45}
+.soonrow .tx b{display:block;color:var(--ink);font-size:14px}
+.soonrow button,.mini-btn{flex:none;border:1.5px solid var(--wood);background:var(--card);color:var(--wood-d);font-weight:800;font-size:12.5px;border-radius:99px;padding:8px 12px;cursor:pointer;font-family:inherit}
+.qc{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:4px 0 8px}
+.qc div{text-align:center;font-size:10.5px;line-height:1.3;color:var(--sub)}
+.qc svg{width:100%;height:auto;display:block;border-radius:10px;background:#F6F0E6;margin-bottom:3px}
+.qc b{display:block;font-size:11.5px}
+.re{color:var(--warn)}.fine{color:var(--ok)}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:2px}
+table.t td{padding:6px 2px;border-top:1px solid var(--line);vertical-align:top;line-height:1.4}
+table.t td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700}
+table.t tr.sum td{font-weight:800;border-top:2px solid var(--wood)}
+table.t tr.head td{font-weight:800;color:var(--wood-d);border-top:0;padding-top:12px}
+.deadline{background:#FBF1E4;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:14px;font-weight:800}
+.deadline small{display:block;font-weight:500;font-size:11.5px;color:var(--sub);margin-top:2px;line-height:1.45}
+.steps3{display:grid;grid-template-columns:1fr 14px 1fr 14px 1fr;align-items:center;gap:2px;margin:12px 0}
+.steps3 .cell{background:var(--card);border:1px solid var(--line);border-radius:12px;aspect-ratio:3/4;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.steps3 .cell img,.steps3 .cell svg{width:100%;height:100%;object-fit:cover}
+.steps3 .cap{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:10.5px;font-weight:700;background:rgba(255,253,249,.9);padding:3px 2px;line-height:1.25}
+.steps3 .arrow{text-align:center;color:var(--wood);font-weight:800;font-size:12px}
+/* ── 4판 ── */
+.trio4{display:grid;grid-template-columns:1fr 16px 1fr 16px 1fr;align-items:center;gap:2px;margin:16px 0 12px}
+.trio4 .cell{background:var(--card);border:1px solid var(--line);border-radius:14px;aspect-ratio:2/3;overflow:hidden;position:relative}
+.trio4 .cell img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+.trio4 .cell svg{position:absolute;left:2px;top:6px;width:calc(100% - 4px);height:calc(100% - 30px)}
+.trio4 .cell.fig{background:linear-gradient(#F7EFE3,#EADBC6)}
+.trio4 .cell canvas{width:100%;height:100%;display:block;touch-action:pan-y}
+.trio4 .cap{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:12px;font-weight:800;background:rgba(255,253,249,.92);padding:4px 2px}
+.trio4 .arrow{text-align:center;color:var(--wood);font-weight:800;font-size:13px}
+.priceline{display:flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:12.5px;color:var(--sub);margin:2px 0 10px;letter-spacing:-.2px}
+.priceline .won{font-size:23px;color:var(--ink);letter-spacing:-.5px}
+.priceline b{color:var(--ink)}
+.pick2.sm{margin-top:8px}
+.pick2.sm .pk svg{height:98px}
+.qpane h2.h2s{font-size:17px;margin-top:14px}
+.cand{display:flex;align-items:center;gap:8px;margin-top:8px}
+.cand .t{flex:none;width:52px;font-size:12.5px;font-weight:700}
+.cand .chips{flex:1}
+.cand .chip{padding:7px 10px;font-size:13px}
+.cand .chip small{color:var(--wood-d);font-weight:700;font-size:10.5px;margin-left:3px}
+details.fold.in{border:0;border-top:1px solid var(--line);border-radius:0;margin:10px 0 0;padding:0;background:transparent}
+details.fold.in summary{padding:10px 0 8px;font-size:13.5px}
+.btn.big{padding:18px;font-size:17px;background:var(--wood-d)}
+.game5{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:8px 0 6px}
+.game5 .gc{background:#FBF4EA;border:2px solid var(--line);border-radius:12px;text-align:center;font-size:12px;font-weight:800;padding:4px 2px 5px;cursor:pointer;user-select:none}
+.game5 .gc svg{width:100%;height:auto;display:block}
+.game5 .gc.hit{border-color:var(--ok);background:#EEF4EC}
+.game5 .gc.miss{border-color:var(--warn);opacity:.55}
+.tier.line{display:flex;align-items:center;padding:13px 46px 13px 14px;font-size:14px;line-height:1.45}
+.tier.line .radio{top:50%;transform:translateY(-50%)}
+.waitrow{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;color:var(--sub);white-space:nowrap}
+.waitrow .chip{padding:7px 11px;font-size:13px;font-weight:700}
+.arrive .est{display:inline-block;font-size:11px;font-weight:700;background:#fff;border-radius:99px;padding:2px 8px;margin-left:4px;color:#55705A;vertical-align:2px}
+.stdbox{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+/* ── 5판 ── */
+.faces5{margin:2px 0 10px}
+.faces5 .ft{font-size:13px;font-weight:800;margin:0 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;white-space:nowrap}
+.faces5 .ft small{font-weight:500;color:var(--sub);font-size:11px;overflow:hidden;text-overflow:ellipsis}
+.faces5 .row{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.faces5 .fc{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-align:center;font-size:11.5px;font-weight:800;padding-bottom:4px}
+.faces5 .fc img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.faces5 .fc small{display:block;font-weight:500;color:var(--sub);font-size:10px;line-height:1.25}
+.incl{background:#F1E9DB;border-radius:12px;padding:9px 12px;margin-top:10px;font-size:13px;line-height:1.5}
+.incl b{color:var(--wood-d)}
+.safe.chk{border-left:3px solid var(--wood);padding:4px 0 4px 10px;margin:12px 0}
+.optnote{font-size:13px;line-height:1.55;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">멍냥<span>공방</span></div><span class="ver" id="ver">5판</span><div class="step" id="stepLabel"></div></header>
+
+<!-- 0 첫 화면: 폰 한 화면(390×844) 안에 — 큰 문구 → 세 칸(사진→캐릭터→피규어) → 값 한 줄 → 버튼. 제작 기준은 접힘 하나 -->
+<section class="screen on" id="s0" data-step="">
+  <h1 id="h0" style="font-size:28px">우리 애가 <br>손바닥 위 캐릭터가 돼요</h1>
+  <p class="lead" id="sub0" style="font-size:15px;margin-bottom:0">특징을 골라 만들고, <b>확정한 시안 그대로</b> 받아요</p>
+  <div class="trio4" id="trio">
+    <div class="cell"><img src="assets/sample-dog.jpg?v=2" alt="표본 사진"><div class="cap">사진</div></div>
+    <div class="arrow">→</div>
+    <div class="cell" id="heroArt"></div>
+    <div class="arrow">→</div>
+    <div class="cell fig" id="heroFig"><canvas id="three0"></canvas><div class="cap">피규어</div></div>
+  </div>
+  <div class="faces5" id="faces5"></div>
+  <div class="priceline" id="priceLine"></div>
+  <details class="fold" id="std0" style="margin:0 0 10px">
+    <summary>제작 기준 보기 <small>불량 합격표</small></summary>
+    <div id="std0Body"></div>
+  </details>
+  <p class="muted" id="note0" style="margin:0">🐾 1인 공방장이 직접 다듬고 뽑아요. <span class="badge">맛보기 · 시험 화면</span> 그림은 표본(매끈한 3D 시안)이에요. 실물은 도색 없이 층 결이 보이고, 실물 사진은 첫 출력 뒤 채워요.</p>
+  <div class="bottom"><button class="btn" id="b0" onclick="go(1)">우리 애로 만들어 보기</button></div>
+</section>
+
+<!-- 1 사진 -->
+<section class="screen" id="s1" data-step="1 / 4 사진">
+  <h2>우리 애 사진을 넣어 주세요</h2>
+  <p class="lead">귀와 무늬가 잘 보이는 정면 사진이면 특징을 고르기 쉬워요. 사진은 색을 맞출 때만 써요.</p>
+  <div class="drop" id="drop" onclick="document.getElementById('file').click()">
+    <div id="dropInner">📷<br><b>사진 고르기</b><br><span class="muted">사진은 이 폰 안에서만 보여요(맛보기는 어디에도 올리지 않음)</span></div>
+  </div>
+  <input type="file" id="file" accept="image/*" hidden>
+  <button class="btn ghost" id="bSample" style="margin-top:10px" onclick="useSample()">표본 사진으로 해 보기 (흰둥이)</button>
+  <div class="group"><div class="t">아이 이름 <span class="muted" style="font-weight:500">· 받침 각인과 카드에 들어가요</span></div>
+    <input class="txt" id="petName" maxlength="8" placeholder="예: 흰둥이"></div>
+  <label class="chk"><input type="checkbox" id="rights" onchange="chk1()"> 내가 찍었거나 써도 되는 우리 아이 사진이에요. 사람 얼굴은 나오지 않게 해 주세요.</label>
+  <div class="bottom"><button class="btn" id="b1" disabled onclick="go(2)">다음 · 특징 3단계</button></div>
+</section>
+
+<!-- 2 특징 3단계: ① 몸·털 ② 귀·얼굴 ③ 실 색 -->
+<section class="screen" id="s2" data-step="2 / 4 특징 3단계">
+  <div class="qtop">
+    <div class="ph"><img id="miniPhoto" src="assets/sample-dog.jpg?v=2" alt=""><span class="cap">사진</span></div>
+    <div class="arrow">→</div>
+    <div class="lv"><div id="liveArt"></div><span class="cap">지금 캐릭터</span></div>
+  </div>
+  <div class="qdots" id="qdots">
+    <div class="qdot" data-q="1" onclick="setQ(1)">① 몸·털</div>
+    <div class="qdot" data-q="2" onclick="setQ(2)">② 귀·얼굴</div>
+    <div class="qdot" data-q="3" onclick="setQ(3)">③ 실 색</div>
+  </div>
+
+  <div class="qpane" id="q1">
+    <h2 class="h2s">몸집은 어느 쪽이에요?</h2>
+    <div class="pick2 sm" data-pk="build">
+      <div class="pk" data-v="puppy"></div>
+      <div class="pk" data-v="big"></div>
+    </div>
+    <h2 class="h2s">털은 어때요?</h2>
+    <div class="pick2 sm" data-pk="coat">
+      <div class="pk" data-v="short"></div>
+      <div class="pk" data-v="fluffy"></div>
+    </div>
+  </div>
+  <div class="qpane" id="q2">
+    <h2 class="h2s">귀는 어떤 모양이에요?</h2>
+    <div class="pick2 sm" data-pk="ears">
+      <div class="pk" data-v="floppy"></div>
+      <div class="pk" data-v="upright"></div>
+    </div>
+    <h2 class="h2s">얼굴형은 어느 쪽에 가까워요?</h2>
+    <div class="pick2 sm" data-pk="head">
+      <div class="pk" data-v="round"></div>
+      <div class="pk" data-v="wide"></div>
+    </div>
+  </div>
+  <div class="qpane" id="q3">
+    <h2>사진에서 색을 콕 찍으면<br>가까운 실 색을 골라 드려요</h2>
+    <div class="opt" style="margin:8px 0"><div class="chip on" data-pick="body" onclick="setPick('body')">몸 털색 찍기</div><div class="chip" data-pick="ear" onclick="setPick('ear')">귀·무늬 색 찍기</div></div>
+    <div style="position:relative;border-radius:12px;overflow:hidden;line-height:0"><img id="pickPhoto" src="assets/sample-dog.jpg?v=2" alt="" style="width:100%;height:240px;object-fit:cover;object-position:50% 15%;cursor:crosshair;touch-action:manipulation"><span id="pickDot" style="position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.35);transform:translate(-50%,-50%);display:none;pointer-events:none"></span></div>
+    <div class="muted" id="pickMsg" style="margin-top:6px">사진 속 우리 애 몸을 콕 누르면, 그늘진 털의 밝기를 맞춘 뒤 공방이 가진 실 가운데 가장 가까운 색을 골라요</div>
+
+    <div class="card" id="filCard" style="padding:12px">
+      <div class="rowh" style="margin-bottom:0"><b style="font-size:14px">가까운 실 색 <span class="muted" style="font-weight:500" id="filMat"></span></b><span class="badge">표본 색표</span></div>
+      <div class="cand"><div class="t">몸</div><div class="chips" id="candBody"></div></div>
+      <div class="cand"><div class="t">귀·무늬</div><div class="chips" id="candEar"></div></div>
+      <details class="fold in" id="filMore">
+        <summary>바꾸기 <small>실 색표 12색 전체에서 고르기</small></summary>
+        <div class="group" style="margin:4px 0 0"><div class="t">몸 실 색 · <span id="filBodyName"></span></div><div class="filgrid" id="filBody"></div></div>
+        <div class="group" style="margin:12px 0 0"><div class="t">귀·무늬 실 색 · <span id="filEarName"></span></div><div class="filgrid" id="filEar"></div></div>
+      </details>
+      <div class="muted" style="margin-top:8px">화면 색 = 실물 색이 되게 캐릭터·3D 시안·주문이 모두 실 색표의 색만 써요. 코·눈은 검정, 혀는 분홍 실로 고정이에요.</div>
+    </div>
+    <div id="limitLive"></div>
+
+    <details class="fold" id="fold">
+      <summary>특징 더 담기 <small>안 해도 돼요 · 귀 크기·눈·주둥이·무늬</small></summary>
+      <div class="group"><div class="t">귀 크기</div><div class="chips" data-k="earSize">
+        <div class="chip" data-v="small">작은 귀</div><div class="chip" data-v="normal">보통</div><div class="chip" data-v="big">큰 귀</div></div></div>
+      <div class="group"><div class="t">눈</div><div class="chips" data-k="eyes">
+        <div class="chip" data-v="closed">웃는 실눈</div><div class="chip" data-v="open">동그란 눈</div></div></div>
+      <div class="group"><div class="t">주둥이 길이</div><div class="chips" data-k="muzzle">
+        <div class="chip" data-v="short">짧은 주둥이</div><div class="chip" data-v="normal">보통</div><div class="chip" data-v="long">긴 주둥이</div></div></div>
+      <div class="group"><div class="t">혀 · 이마 줄</div><div class="chips" data-k="toggles">
+        <div class="chip" data-v="tongue">혀 빼꼼</div><div class="chip" data-v="stripe">이마 줄무늬</div></div></div>
+      <div class="group"><div class="t">몸 무늬</div><div class="chips" data-k="mark">
+        <div class="chip" data-v="none">없음</div><div class="chip" data-v="back">등 얼룩</div><div class="chip" data-v="chest">가슴 흰 털</div></div></div>
+      <div class="group"><div class="t">★ 꼭 살릴 것 <span class="muted" style="font-weight:500">· 최대 3개, 눌러서 고르기</span></div><div class="chips" id="mustPick"></div></div>
+    </details>
+
+    <div class="group"><div class="t">꼭 넣어 주세요 <span class="muted" style="font-weight:500">· 한 줄 메모(안 써도 돼요)</span></div>
+      <input class="txt" id="memo" maxlength="30" placeholder="예: 왼쪽 귀 끝 검은 점, 빨간 스카프">
+      <div class="muted" style="margin-top:4px">메모는 이 그림에 바로 반영되지 않고, 공방장이 3D 시안을 다듬을 때 넣어요. 시안에서 확인하고 확정해요.</div></div>
+  </div>
+  <div class="bottom"><button class="btn" id="b2" onclick="nextQ()">다음</button></div>
+</section>
+
+<!-- 3 만드는 중 -->
+<section class="screen" id="s3" data-step="3 / 4 만드는 중">
+  <div class="making"><div class="pot">🖌️</div><h2 id="makeTitle">공방에서 그리는 중…</h2><ul id="makeList" style="padding:0"></ul></div>
+</section>
+
+<!-- 4 결과: 반반 비교 → 3D 시안(기본 매끈, 결은 토글) → 자랑 카드(크게) → "이 중에 우리 애는?" 놀이 -->
+<section class="screen" id="s4" data-step="3 / 4 결과">
+  <h2><span id="nm1">우리 애</span> 캐릭터가 나왔어요</h2>
+  <div class="card" style="padding:12px">
+    <div class="rowh"><b style="font-size:14px">사진이랑 나란히</b><div class="seg" id="cmpSeg"><div class="on" data-m="half" onclick="setCmp('half')">반반</div><div data-m="slide" onclick="setCmp('slide')">밀어 보기</div></div></div>
+    <div class="half" id="half">
+      <div class="hp"><img id="halfPhoto" src="assets/sample-dog.jpg?v=2" alt=""><span>사진</span></div>
+      <div class="hp"><div class="art" id="halfArt"></div><span>캐릭터</span></div>
+    </div>
+    <div id="slideWrap" style="display:none">
+      <div class="compare" id="cmp"><img id="cmpPhoto" src="assets/sample-dog.jpg?v=2" alt=""><div class="art" id="cmpArt"></div><div class="bar"></div><div class="l">사진</div><div class="r">캐릭터</div></div>
+      <input type="range" min="0" max="100" value="50" oninput="document.getElementById('cmp').style.setProperty('--cut',this.value+'%')">
+    </div>
+    <div class="must-bar" id="mustBar2"></div>
+    <div class="muted" id="memoEcho" style="margin-top:6px"></div>
+  </div>
+  <div class="card" style="padding:12px">
+    <div class="rowh"><b style="font-size:14px">3D 시안 <span class="muted" style="font-weight:500">· 확정하면 이 시안 그대로</span></b><div class="seg" id="realSeg"><div data-r="0" onclick="setReal(false)">매끈한 시안</div><div data-r="1" onclick="setReal(true)">실물 모습(결)</div></div></div>
+    <div class="stage" style="height:240px"><canvas id="three4"></canvas><span class="tag" id="realBadge" style="left:8px;top:8px">도색 없음 · 결 보임</span><span class="tag" id="realMode" style="right:8px;top:8px"></span></div>
+    <div class="ang" id="ang">
+      <div class="chip on" data-a="front" onclick="setAngle('front')">정면</div>
+      <div class="chip" data-a="side" onclick="setAngle('side')">옆</div>
+      <div class="chip" data-a="back" onclick="setAngle('back')">뒤</div>
+    </div>
+    <p class="hint">버튼으로 돌리거나 손가락으로 밀어 보세요</p>
+    <div class="muted" id="realNote">지금은 <b>매끈한 시안</b> 그림이에요. 실물은 도색 없이 3D 프린팅의 층 결(가로 줄)이 보여요. <b>실물 모습(결)</b>을 누르면 결과 무광 표면을 미리 볼 수 있어요. 결은 보기 좋게 과장해 그렸고, 실제 층(0.12mm)은 더 촘촘해요.</div>
+    <div id="limit4"></div>
+  </div>
+  <div class="card" id="shareCard" style="padding:12px">
+    <button class="btn big" id="bShare" onclick="shareCard()">자랑 카드 만들기</button>
+    <div class="muted" style="margin-top:6px;text-align:center">사진 옆에 캐릭터를 나란히 놓은 세로 그림 · 이 폰 안에서만 만들어요</div>
+  </div>
+  <div class="card" id="gameCard" style="padding:12px">
+    <b style="font-size:15px" id="gameTitle">이 중에 우리 애는?</b> <span class="muted">· 친구에게 보내 맞혀 보게 해요</span>
+    <div class="game5" id="game5"></div>
+    <div class="muted" id="gameMsg">하나를 눌러 보세요</div>
+    <button class="btn ghost sm" id="bGame" style="margin-top:10px" onclick="shareGame()">놀이 카드 저장하기</button>
+  </div>
+  <p class="muted"><span class="badge">표본·미완</span> 받는 모양의 기준은 <b>확정한 3D 시안</b>이에요. 실제 출력용 틀(같은 치수)이고 색은 실 색표의 색이에요. 캐릭터 그림의 볼 홍조·눈 반짝임은 그림에만 있어요. 사진은 색을 맞출 때만 쓰여요. 실물 사진은 첫 출력 뒤 채워요.</p>
+  <button class="btn ghost" id="bTune" style="margin-top:4px;padding:12px;font-size:14px" onclick="tune()">특징 더 담기</button>
+  <div class="bottom"><button class="btn" id="b4" onclick="go(5)">이 특징으로 제작 신청</button></div>
+</section>
+
+<!-- 5 굿즈: 피규어 한 장 + 디지털 한 줄 + 알림 신청 칩 한 줄 -->
+<section class="screen" id="s5" data-step="4 / 4 굿즈">
+  <h2>제작 신청</h2>
+  <div id="goods"></div>
+  <div class="bottom"><button class="btn" id="b5" onclick="toOrder()">주문 확인하기</button></div>
+</section>
+
+<!-- 6 주문 확인 -->
+<section class="screen" id="s6" data-step="주문 확인">
+  <h2>주문 확인</h2>
+  <div class="card"><div class="kv" id="orderKv"></div></div>
+  <div id="limit6"></div>
+  <div id="orderFlow"></div>
+  <div id="orderGift"></div>
+  <div id="orderStd"></div>
+  <div id="orderPub"></div>
+  <div id="orderSafe"></div>
+  <label class="chk"><input type="checkbox" id="agree" onchange="chk6()"> <span id="agreeTxt"></span></label>
+  <p class="muted"><span class="badge">미확인</span> 취소·환불 문구는 출시 전에 전자상거래법 원문으로 다시 확인해야 해요.</p>
+  <div class="bottom"><button class="btn" id="b6" disabled onclick="pay()">결제하기 <span id="payAmt"></span> <span style="font-weight:500;font-size:12px">(시험 · 실제 결제 없음)</span></button></div>
+</section>
+
+<!-- 7 내 주문 (시험) -->
+<section class="screen" id="s7" data-step="내 주문 · 시험">
+  <div class="testbar" id="testbar">🧪 시험 화면 · 실제 결제 없음</div>
+  <h2>내 주문</h2>
+  <div id="mine"></div>
+  <div class="bottom"><button class="btn ghost" id="b7" style="background:var(--card)" onclick="go(0)">처음으로</button></div>
+</section>
+<div class="toast" id="toast" onclick="this.style.display='none'"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="filaments.js?v=2"></script>
+<script src="sculpt.js?v=6"></script>
+<script>
+const SAMPLE="assets/sample-dog.jpg?v=2";
+/* 색은 모두 실 색표(filaments.js)에서 온다 — 화면 색 = 실물 색 */
+const FIL=MnFil, FILC={black:FIL.byId('black').hex,pink:FIL.byId('pink').hex};
+/* 4판: 체형 build(아기 강아지 puppy / 큰 개 big) · 털 coat(짧은 털 short / 복슬 털 fluffy). 흰둥이 기본값 = 큰 개 + 복슬 */
+const S={photo:SAMPLE,build:"big",coat:"fluffy",ears:"floppy",earSize:"normal",eyes:"closed",muzzle:"normal",head:"round",mark:"none",tongue:true,stripe:true,body:FIL.byId('white').hex,ear:FIL.byId('gray').hex,fil:{body:'white',ear:'gray'},raw:{body:null,ear:null},adj:{body:null,ear:null},gain:{body:1,ear:1},must:["coat","tongue","stripe"],name:"우리 애",memo:"",picked:{body:false,ear:false},gift:false,giftTo:""};
+const FEAT_KEYS=["build","coat","ears","earSize","eyes","muzzle","head","mark","tongue","stripe"];
+function setFil(k,id){const f=FIL.byId(id);S.fil[k]=id;S[k]=f.hex;}
+const dot=c=>`<span class="dot" style="background:${c}"></span>`;
+const LABEL={build:()=>S.build==="big"?"#큰개":"#아기강아지",coat:()=>S.coat==="fluffy"?"#복슬털":"#짧은털",ears:()=>S.ears==="floppy"?"#접힌귀":"#쫑긋귀",eyes:()=>S.eyes==="closed"?"#웃는실눈":"#동그란눈",tongue:()=>"#혀빼꼼",stripe:()=>"#이마줄무늬",earSize:()=>S.earSize==="small"?"#작은귀":"#큰귀",muzzle:()=>S.muzzle==="short"?"#짧은주둥이":"#긴주둥이",head:()=>S.head==="wide"?"#넓적얼굴":"#둥근얼굴",mark:()=>S.mark==="back"?"#등얼룩":"#가슴흰털"};
+let SPEC=null, SPEC_P=null, cur=0, Q=1;
+const $=id=>document.getElementById(id);
+const won=n=>n.toLocaleString('ko-KR')+'원';
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* 받침이 있으면 a, 없으면 b (흰둥이는 / 콩떡은) */
+function josa(w,a,b){const c=String(w).charCodeAt(String(w).length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?a:b;}
+function loadSpec(){return SPEC_P||(SPEC_P=fetch("figure-spec.json?v="+Date.now()).then(r=>r.json()).then(j=>(SPEC=j)));}
+
+function go(n){
+  stopThree();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  const el=$('s'+n);el.classList.add('on');cur=n;$('stepLabel').textContent=el.dataset.step||'';window.scrollTo(0,0);
+  if(n===0)renderHome();if(n===2)renderFeat();if(n===4)renderResult();if(n===5)renderGoods();if(n===6)renderOrder();if(n===7)renderMine();
+}
+function toast(h){const t=$('toast');t.innerHTML=h;t.style.display='block';t.onclick=()=>t.style.display='none';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3200);}
+
+/* 5판: 구체 날짜·접수 막대·'자리 남음'을 모두 뺐다(출력 0건이라 근거가 없다). 일정은 이 한 줄로만 말한다 */
+const SCHED='첫 출력 검증 뒤 일정 확정 · 예상 영업일 7~10일';
+const PUB={seats:10}; // 첫 10자리 '공개 제작' — 제작 과정을 영상으로 남겨도 되는지 묻는 선택 동의. 값·일정·할인과 무관
+/* 첫 화면 값 한 줄: 59,000원 · 시안·이름 새김·무료 배송 포함 */
+function priceLineHtml(){return `<b class="won">${won(FIG.price)}</b> <span>· 시안·이름 새김·무료 배송 포함</span>`;}
+
+/* 제작 기준: 불량 합격표(손님 화면) · 분 단위 원가표(4판부터 손님 화면에서 뺌 — 우리가 볼 표, 아래 costHtml 은 부르는 곳이 없다) */
+const QC=[ // [기준 초안] 그림은 단순 도식 — 첫 출력 뒤 실물 사진 예시로 바꾼다
+ {k:"far",re:true,t:"팔 길이 거리에서 보이는 흠",s:"약 60cm에서 눈에 띄는 흠"},
+ {k:"face",re:true,t:"얼굴 정면의 흠",s:"눈·코·입 둘레"},
+ {k:"bleed",re:true,t:"색 번짐",s:"색 경계가 넘어감"},
+ {k:"layer",re:false,t:"층 결",s:"가로 줄무늬"},
+ {k:"dot",re:false,t:"작은 자국",s:"뒤·바닥의 점, 이음매"}
+];
+function qcSvg(k){
+  const head=`<circle cx="30" cy="30" r="20" fill="#EFE6D2" stroke="#CDBFA6" stroke-width="1.5"/>`;
+  const face=`<circle cx="23" cy="28" r="2.2" fill="#232120"/><circle cx="37" cy="28" r="2.2" fill="#232120"/><ellipse cx="30" cy="34" rx="3" ry="2.2" fill="#232120"/>`;
+  const ring=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#D9774B" stroke-width="2" stroke-dasharray="3 2"/>`;
+  const m={
+   far:head+face+`<path d="M37 39 l6 -3 l1 5 l-5 3 z" fill="#8C6440"/>`+ring(40.5,39.5,7),
+   face:head+face+`<path d="M27 21.5 l6 3" stroke="#8C6440" stroke-width="2.4" stroke-linecap="round"/>`+ring(30,23,6.5),
+   bleed:`<ellipse cx="12" cy="30" rx="6" ry="12" fill="#9A9895"/>`+head+face+`<path d="M10.5 25 q9 -3 12 2 q-6 5 -11 6z" fill="#9A9895" opacity=".9"/>`+ring(17,28.5,8.5),
+   layer:head+`<g stroke="#CDBFA6" stroke-width="1">${[13,16.4,19.8,23.2,26.6,30,33.4,36.8,40.2,43.6,47].map(y=>{const w=Math.sqrt(400-(y-30)**2)-1.5;return `<path d="M${(30-w).toFixed(1)} ${y} H${(30+w).toFixed(1)}"/>`}).join('')}</g>`+face,
+   dot:head+`<circle cx="36" cy="44" r="1.7" fill="#8C6440"/><text x="30" y="32" font-size="9" text-anchor="middle" fill="#B7A68C" font-weight="700" font-family="Apple SD Gothic Neo,sans-serif">뒤</text>`
+  };
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">${m[k]}</svg>`;
+}
+function qcHtml(p){
+  return `<div id="${p}Qc"><div class="rowh" style="margin-bottom:4px"><b>불량 합격표</b><span class="muted">이럴 땐 다시 뽑아요</span></div>
+    <div class="qc">${QC.map(q=>`<div>${qcSvg(q.k)}<b class="${q.re?'re':'fine'}">${q.re?'재출력':'정상'}</b>${q.t}</div>`).join('')}</div>
+    <table class="t">${QC.map(q=>`<tr><td>${q.t} <span class="muted">· ${q.s}</span></td><td class="${q.re?'re':'fine'}">${q.re?'재출력':'정상'}</td></tr>`).join('')}</table>
+    <div class="muted" style="margin-top:8px">발송 전에 실물 사진을 먼저 보내 드려요. 받은 뒤에도 재출력 기준에 해당하면 7일 안에 다시 만들거나 환불해요. <span class="badge">기준 초안</span> 그림은 단순 도식이고, 첫 출력 뒤 실물 사진 예시로 바꿔요.</div></div>`;
+}
+const COST={price:59000, // [가정] 첫 출력 전 어림값 — 첫 5건을 재서 고친다. 4판: 화면에 내지 않는다(우리가 볼 표)
+ mins:[["3D 시안 다듬기·보내기",25],["출력 걸기·지켜보기",15],["떼기·다듬기",10],["검수·실물 사진",10],["포장",10],["손님 응대",15]],
+ won:[["실(PLA 4색, 색 바꿀 때 버리는 양 포함)",1500],["전기",300],["포장(상자·완충재·카드)",1500],["택배(배송비 무료라 값에 포함)",3500],["결제 수수료(약 3.4%)",2000],["실패 재출력 몫(5개 중 1개를 다시 뽑는다고 봄)",1200]]};
+function costSum(){const out=COST.won.reduce((a,x)=>a+x[1],0),min=COST.mins.reduce((a,x)=>a+x[1],0),left=COST.price-out;return{out,min,left,perHour:Math.round(left/min*60/100)*100};}
+function costHtml(p){ // 4판: 손님 화면에서 뺌. 우리끼리 볼 때만 쓴다(콘솔에서 costHtml('x') 로 표를 볼 수 있다)
+  const c=costSum();
+  return `<details class="fold" id="${p}Cost"><summary>② ${won(COST.price)}은 어디에 쓰이나 <small>분 단위 원가표</small></summary>
+    <div class="muted"><span class="badge">가정</span> 아래 숫자는 모두 첫 출력 전 <b>[가정]</b> 어림값이에요. 첫 5건을 재서 고쳐요.</div>
+    <table class="t" id="${p}CostT">
+      <tr class="head"><td>나가는 돈 [가정]</td><td></td></tr>
+      ${COST.won.map(x=>`<tr><td>${x[0]}</td><td>${won(x[1])}</td></tr>`).join('')}
+      <tr class="sum"><td>나가는 돈 합계</td><td data-c="out">${won(c.out)}</td></tr>
+      <tr class="head"><td>공방장이 들이는 시간 [가정]</td><td></td></tr>
+      ${COST.mins.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}분</td></tr>`).join('')}
+      <tr class="sum"><td>시간 합계</td><td data-c="min">${c.min}분</td></tr>
+      <tr class="sum"><td>남는 돈 = ${won(COST.price)} − ${won(c.out)}</td><td data-c="left">${won(c.left)}</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">남는 ${won(c.left)}은 ${c.min}분 일한 값이에요(시간당 약 ${won(c.perHour)}). 재료비가 아니라 시안·검수·응대의 시간값이에요. 세금, 프린터 값과 닳는 몫, 프린터가 혼자 도는 출력 시간은 아직 넣지 않았어요.</div>
+  </details>`;
+}
+
+/* 5판 첫 화면 5마리 줄: 같은 틀(figure-spec.json)로 빚은 표본(figure/make_sheet.py --얼굴 이 만든 그림) */
+const FACES=[['흰둥이','큰 개·복슬'],['콩떡','큰 개·짧은 털'],['두부','아기·복슬'],['보리','아기·짧은 털'],['설기','큰 개·긴 주둥이']];
+/* 0 첫 화면: 폰 한 화면 */
+function renderHome(){
+  $('heroArt').innerHTML=art()+'<div class="cap">캐릭터</div>';
+  $('priceLine').innerHTML=priceLineHtml();
+  $('std0Body').innerHTML=`<div class="stdbox" style="border-top:0;margin-top:0;padding-top:0">${qcHtml('t0')}</div>`;
+  $('faces5').innerHTML=`<div class="ft">이런 아이들이 나와요 <small>같은 틀로 만든 표본 5마리</small></div><div class="row">${FACES.map(f=>`<div class="fc"><img src="assets/pup-${encodeURIComponent(f[0])}.png?v=1" alt="${f[0]}"><span>${f[0]}</span><small>${f[1]}</small></div>`).join('')}</div>`;
+  initThree('three0',{screen:0,real:false,angle:-0.45,lookY:25}); // 세 칸의 피규어: 매끈한 시안 그림(표본)
+}
+
+/* 1 사진 */
+function setPhoto(src){S.photo=src;S.picked={body:false,ear:false};S.raw={body:null,ear:null};S.adj={body:null,ear:null};S.gain={body:1,ear:1};TOUCH={};$('dropInner').innerHTML='<img src="'+src+'" alt="">';['miniPhoto','cmpPhoto','pickPhoto','halfPhoto'].forEach(i=>$(i).src=src);$('pickDot').style.display='none';setPick('body');chk1();}
+function useSample(){
+  Object.assign(S,{build:"big",coat:"fluffy",ears:"floppy",earSize:"normal",eyes:"closed",muzzle:"normal",head:"round",mark:"none",tongue:true,stripe:true,must:["coat","tongue","stripe"]});
+  setFil('body','white');setFil('ear','gray');
+  if(!$('petName').value){$('petName').value='흰둥이';S.name='흰둥이';}
+  setPhoto(SAMPLE);
+}
+$('file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{
+  /* 내 사진이면 표본(흰둥이) 특징을 지우고 무난한 기본에서 시작 */
+  Object.assign(S,{build:"puppy",coat:"short",ears:"floppy",earSize:"normal",eyes:"open",muzzle:"normal",head:"round",mark:"none",tongue:false,stripe:false,must:["ears","head"]});
+  setPhoto(r.result);};r.readAsDataURL(f);});
+function chk1(){$('b1').disabled=!(S.photo&&$('rights').checked&&document.querySelector('#dropInner img'));}
+$('petName').addEventListener('input',e=>S.name=e.target.value.trim()||'우리 애');
+
+/* 사진에서 색 찍기: 누른 자리 둘레 평균색(그림자·하이라이트 덜 타게 가운데값 쪽으로) → 밝기 보정 → 가진 실 색 가운데 가까운 색 3개 */
+let PICK="body";
+function setPick(k){PICK=k;document.querySelectorAll('[data-pick]').forEach(c=>c.classList.toggle('on',c.dataset.pick===k));}
+function photoColorAt(img,fx,fy){
+  const W=img.naturalWidth,H=img.naturalHeight,cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');ctx.drawImage(img,0,0);
+  const r=Math.max(4,Math.round(Math.min(W,H)*0.025)),x=Math.round(fx*W),y=Math.round(fy*H);
+  const d=ctx.getImageData(Math.max(0,x-r),Math.max(0,y-r),r*2,r*2).data, px=[];
+  for(let i=0;i<d.length;i+=4) px.push([d[i],d[i+1],d[i+2],d[i]+d[i+1]+d[i+2]]);
+  px.sort((a,b)=>a[3]-b[3]); const mid=px.slice(Math.floor(px.length*.2),Math.ceil(px.length*.8));
+  const avg=[0,1,2].map(j=>Math.round(mid.reduce((s,p)=>s+p[j],0)/mid.length));
+  return '#'+avg.map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+/* 4판 밝기 보정 — 그늘진 흰 털이 회색으로 읽히는 문제.
+   찍은 자리에서 '같은 털'을 따라 밝은 쪽으로만 번져 간다(이웃 칸과 색 차이가 step 보다 작고, 찍은 자리와 색 기운(r·g 비율) 차이가 chroma 보다 작고,
+   밝기가 down 넘게 떨어지지 않는 칸만). 그렇게 모은 털에서 밝은 쪽(pct 자리)의 밝기를 기준으로 찍은 색의 노출을 끌어올린다(최대 cap 배, 어둡게는 안 함).
+   귀처럼 경계가 뚜렷한 다른 색 털로는 넘어가지 않는다. 사진은 긴 변 max 칸으로 줄이고 3×3 으로 고르게 해서 본다. */
+const EXPO={max:144,lim:720,step:9,chroma:0.03,down:2,pct:0.8,cap:1.8};
+let PHS=null;
+function photoSmall(img){
+  if(PHS&&PHS.src===img.src) return PHS;
+  const W=img.naturalWidth,H=img.naturalHeight,s0=Math.min(1,EXPO.lim/Math.max(W,H)),cw=Math.round(W*s0),ch=Math.round(H*s0);
+  const cv=document.createElement('canvas');cv.width=cw;cv.height=ch;const ctx=cv.getContext('2d');ctx.drawImage(img,0,0,cw,ch);
+  const d=ctx.getImageData(0,0,cw,ch).data,B=Math.max(1,Math.round(Math.max(cw,ch)/EXPO.max)),w=Math.floor(cw/B),h=Math.floor(ch/B),a=new Float32Array(w*h*3);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let r=0,g=0,b=0;
+    for(let j=0;j<B;j++){let i=((y*B+j)*cw+x*B)*4;for(let k=0;k<B;k++,i+=4){r+=d[i];g+=d[i+1];b+=d[i+2];}}
+    const o=(y*w+x)*3,n=B*B;a[o]=r/n;a[o+1]=g/n;a[o+2]=b/n;}
+  const rgb=new Float32Array(w*h*3);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)for(let c=0;c<3;c++){let s=0;
+    for(let dy=-1;dy<=1;dy++){const yy=Math.min(h-1,Math.max(0,y+dy));for(let dx=-1;dx<=1;dx++){const xx=Math.min(w-1,Math.max(0,x+dx));s+=a[(yy*w+xx)*3+c];}}
+    rgb[(y*w+x)*3+c]=s/9;}
+  return PHS={src:img.src,w,h,rgb};
+}
+function brightFix(img,fx,fy,rawHex){
+  const P=photoSmall(img),w=P.w,h=P.h,a=P.rgb,E=EXPO;
+  const sx=Math.min(w-1,Math.floor(fx*w)),sy=Math.min(h-1,Math.floor(fy*h)),s0=(sy*w+sx)*3;
+  const ss=a[s0]+a[s0+1]+a[s0+2]||1,sr=a[s0]/ss,sg=a[s0+1]/ss;
+  const lum=i=>0.2126*a[i]+0.7152*a[i+1]+0.0722*a[i+2];
+  const seen=new Uint8Array(w*h),q=new Int32Array(w*h),L=[];let qh=0,qt=0;q[qt++]=sy*w+sx;seen[sy*w+sx]=1;
+  while(qh<qt){
+    const c=q[qh++],ci=c*3,cl=lum(ci),x=c%w,y=(c-x)/w;L.push(cl);
+    for(let m=0;m<4;m++){
+      const nx=x+(m===0?1:m===1?-1:0),ny=y+(m===2?1:m===3?-1:0);if(nx<0||ny<0||nx>=w||ny>=h)continue;
+      const n=ny*w+nx;if(seen[n])continue;const ni=n*3,t=a[ni]+a[ni+1]+a[ni+2]||1;
+      if(Math.max(Math.abs(a[ni]-a[ci]),Math.abs(a[ni+1]-a[ci+1]),Math.abs(a[ni+2]-a[ci+2]))<E.step
+        &&Math.max(Math.abs(a[ni]/t-sr),Math.abs(a[ni+1]/t-sg))<E.chroma&&lum(ni)>=cl-E.down){seen[n]=1;q[qt++]=n;}
+    }
+  }
+  L.sort((p,r)=>p-r);const ref=L[Math.floor((L.length-1)*E.pct)];
+  const n=parseInt(rawHex.slice(1),16),rgb=[n>>16,(n>>8)&255,n&255],rl=0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2]||1;
+  const g=Math.min(E.cap,Math.max(1,ref/rl));
+  return {gain:g,n:L.length,hex:'#'+rgb.map(v=>Math.min(255,Math.round(v*g)).toString(16).padStart(2,'0')).join('').toUpperCase()};
+}
+/* 사진의 (fx,fy) 자리를 찍었을 때의 결과(찍은 색 · 보정한 색 · 가까운 실 3개). 화면을 바꾸지 않는다 */
+function pickAt(img,fx,fy){
+  const raw=photoColorAt(img,fx,fy);let adj=raw,gain=1;
+  try{const b=brightFix(img,fx,fy,raw);adj=b.hex;gain=b.gain;}catch(_){}
+  return {raw,adj,gain,near:FIL.near(adj,3)};
+}
+$('pickPhoto').addEventListener('click',e=>{
+  const img=e.currentTarget, rect=img.getBoundingClientRect();
+  /* object-fit:cover 로 잘린 부분을 감안해 원본 좌표로 바꿈 */
+  const W=img.naturalWidth,H=img.naturalHeight,sc=Math.max(rect.width/W,rect.height/H);
+  const dw=W*sc,dh=H*sc,ox=(rect.width-dw)*.5,oy=(rect.height-dh)*.15; /* object-position 50% 15% 와 같은 값 */
+  const fx=(e.clientX-rect.left-ox)/dw, fy=(e.clientY-rect.top-oy)/dh;
+  if(fx<0||fx>1||fy<0||fy>1) return;
+  let p; try{p=pickAt(img,fx,fy);}catch(err){toast("이 사진은 색을 읽을 수 없어요.<br>'바꾸기'를 눌러 실 색표에서 직접 골라 주세요");return;}
+  const was=PICK, f=p.near[0]; S.raw[was]=p.raw; S.adj[was]=p.adj; S.gain[was]=p.gain; setFil(was,f.id); S.picked[was]=true;
+  const pd=$('pickDot');pd.style.display='block';pd.style.left=(e.clientX-rect.left)+'px';pd.style.top=(e.clientY-rect.top)+'px';pd.style.background=p.raw;
+  $('pickMsg').innerHTML=`<b>${was==='body'?'몸 털색':'귀·무늬 색'}</b> · 찍은 색 ${dot(p.raw)}`+(p.gain>1.03?` → 밝기 보정 ${dot(p.adj)}`:'')+` → 가장 가까운 실 색 <b>${f.name}</b> ${dot(f.hex)} `+(S.picked.body&&S.picked.ear?'· 두 색 다 맞췄어요. 아래 칩에서 바꿀 수 있어요':was==='body'?'· 이제 귀를 찍어 보세요':'· 몸 색도 찍어 보세요');
+  setPick(was==='body'?'ear':'body');
+  renderFeat();
+});
+
+/* 캐릭터 그림 (앞모습, SVG) — 피규어 틀과 같은 특징을 씀. o.s 를 주면 그 아이(놀이 카드의 다른 강아지)를 그린다 */
+let ART_N=0;
+function art(o={}){
+  const T=o.s||S, b=T.body,e=T.ear,dark=FILC.black,pink=FILC.pink, u='a'+(++ART_N);
+  const tint=(c,f)=>{const n=parseInt(c.slice(1),16);const m=v=>Math.max(0,Math.min(255,Math.round(f>1?v+(255-v)*(f-1):v*f)));return`rgb(${m(n>>16)},${m((n>>8)&255)},${m(n&255)})`};
+  const gB=`url(#${u}b)`, gE=`url(#${u}e)`, line=tint(b,.72);
+  const shade=c=>{const n=parseInt(c.slice(1),16);let r=(n>>16)*.86,g=((n>>8)&255)*.86,bl=(n&255)*.86;return`rgb(${r|0},${g|0},${bl|0})`};
+  /* 2D 그림용 치수(화면 그림 전용 — 피규어 치수는 figure-spec.json) */
+  const big=T.build==="big", fluffy=T.coat==="fluffy";
+  const wide=T.head==="wide", H=wide?{rx:75,ry:55,cy:105}:{rx:66,ry:58,cy:104}, ex=wide?8:0, ed=wide?5:0;
+  /* 체형: 큰 개는 머리를 줄여 올리고(hs·hy) 몸·다리를 길고 굵게 */
+  const hs=big?.74:1.08, hy=big?-4:0, hb=H.cy+hy+H.ry*hs; // hb = 머리 아래 끝
+  const B=big?{cy:188,rx:56,ry:72,fdx:52,fcy:240,frx:26,lx:[90,128],lw:22,ly:170,lh:92}:{cy:206,rx:50,ry:50,fdx:42,fcy:240,frx:24,lx:[98,124],lw:20,ly:224,lh:34};
+  /* 털 뭉치: 동그라미 여럿을 한 덩어리처럼(바깥 테두리만 보이게 테두리를 먼저, 속을 나중에) */
+  const cloud=cs=>cs.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]+2.2}" fill="${line}"/>`).join('')+cs.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]}" fill="${gB}"/>`).join('');
+  const FL={small:{rx:13,ry:24,cy:86},normal:{rx:17,ry:34,cy:98},big:{rx:21,ry:45,cy:110}}[T.earSize]||{rx:17,ry:34,cy:98};
+  const UP={small:x=>`M${x(74)} 68 L${x(86)} 34 L${x(108)} 58 Z`,normal:x=>`M${x(70)} 70 L${x(84)} 18 L${x(112)} 58 Z`,big:x=>`M${x(60)} 76 Q${x(54)} 10 ${x(80)} 6 Q${x(106)} 10 ${x(120)} 58 Z`};
+  const up=UP[T.earSize]||UP.normal;
+  const ears=T.ears==="floppy"
+    ?[58-ex,182+ex].map((cx,i)=>`<ellipse cx="${cx}" cy="${FL.cy}" rx="${FL.rx}" ry="${FL.ry}" fill="${gE}" stroke="${tint(e,.75)}" stroke-width="2" transform="rotate(${i?-22:22} ${cx} ${FL.cy})"/>`).join("")
+    :[x=>x-ex,x=>240-x+ex].map(x=>`<path d="${up(x)}" fill="${gE}" stroke="${tint(e,.75)}" stroke-width="3" stroke-linejoin="round"/>`).join("");
+  const eyeL=T.eyes==="closed"
+    ?`<path d="M86 104 q12 -12 24 0" stroke="${dark}" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    :`<circle cx="98" cy="102" r="9.5" fill="${dark}"/><circle cx="101.5" cy="98" r="3.4" fill="#fff"/><circle cx="95" cy="106" r="1.4" fill="#fff" opacity=".8"/>`;
+  const eyes=`<g transform="translate(${-ed} 0)">${eyeL}<ellipse cx="91" cy="124" rx="9" ry="5" fill="#F2A7A0" opacity=".45"/></g><g transform="translate(${44+ed} 0)">${eyeL}<ellipse cx="105" cy="124" rx="9" ry="5" fill="#F2A7A0" opacity=".45"/></g>`;
+  const stripe=T.stripe?`<path d="M120 ${wide?55:52} q-9 22 0 44 q9 -22 0 -44Z" fill="${e}"/>`:"";
+  let MZ={short:{rx:33,ry:15,cy:124,dy:-4},normal:{rx:30,ry:21,cy:128,dy:0},long:{rx:27,ry:29,cy:135,dy:9}}[T.muzzle]||{rx:30,ry:21,cy:128,dy:0};
+  if(big) MZ={rx:MZ.rx,ry:MZ.ry+3,cy:MZ.cy+1,dy:MZ.dy+2}; // 큰 개는 주둥이가 조금 길다
+  const tongue=T.tongue?`<path d="M110 134 q10 24 20 0 Z" fill="${pink}" stroke="#C86D7E" stroke-width="2"/>`:"";
+  const back=T.mark==="back"?`<ellipse cx="160" cy="${B.cy-12}" rx="15" ry="22" fill="${e}" transform="rotate(-14 160 ${B.cy-12})"/>`:"";
+  /* 가슴 흰 털: 포인트 4색에서는 몸 색으로 나온다 → 색을 칠하지 않고, 못 담을 때는 점선으로만 자리를 보인다 */
+  const chest=T.mark==="chest"?`<ellipse cx="120" cy="${B.cy-12}" rx="25" ry="27" fill="none" stroke="${tint(b,T.fil.body==='white'?.86:.6)}" stroke-width="2" ${T.fil.body==='white'?'':'stroke-dasharray="5 4"'}/>`:"";
+  /* 꼬리: 짧은 털은 가는 꼬리, 복슬 털은 털 뭉치 꼬리(몸 뒤에서 옆으로 보인다) */
+  const tx=120+B.rx, tail=fluffy?cloud([[tx+3,B.cy+8,19],[tx+9,B.cy-16,15]])
+    :`<path d="M${tx-12} ${B.cy+24} q32 -6 27 -42" stroke="${line}" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M${tx-12} ${B.cy+24} q32 -6 27 -42" stroke="${b}" stroke-width="10.5" fill="none" stroke-linecap="round"/>`;
+  /* 복슬 털: 볼 털 뭉치(머리 뒤에서 삐져나옴) · 가슴 털 뭉치(턱 아래) */
+  const cheekF=fluffy?cloud([[120-H.rx+2,H.cy+26,19],[120+H.rx-2,H.cy+26,19]]):"";
+  const ruff=fluffy?cloud([[104,hb+2,18],[136,hb+2,18],[120,hb+14,19]]):"";
+  const name=o.name?`<rect x="70" y="268" width="100" height="22" rx="11" fill="#B7895A"/><text x="120" y="284" font-size="13" text-anchor="middle" fill="#fff" font-weight="700" font-family="Apple SD Gothic Neo,sans-serif">${esc(T.name)}</text>`:"";
+  const core=`
+  <ellipse cx="120" cy="262" rx="${big?74:70}" ry="8" fill="rgba(0,0,0,.08)"/>
+  ${tail}
+  <ellipse cx="120" cy="${B.cy}" rx="${B.rx}" ry="${B.ry}" fill="${gB}" stroke="${line}" stroke-width="2.5"/>
+  ${back}
+  <ellipse cx="${120-B.fdx}" cy="${B.fcy}" rx="${B.frx}" ry="22" fill="${shade(b)}"/><ellipse cx="${120+B.fdx}" cy="${B.fcy}" rx="${B.frx}" ry="22" fill="${shade(b)}"/>
+  <rect x="${B.lx[0]}" y="${B.ly}" width="${B.lw}" height="${B.lh}" rx="${B.lw/2}" fill="${b}" stroke="${shade(b)}" stroke-width="2"/><rect x="${B.lx[1]}" y="${B.ly}" width="${B.lw}" height="${B.lh}" rx="${B.lw/2}" fill="${b}" stroke="${shade(b)}" stroke-width="2"/>
+  ${chest}
+  ${ruff}
+  <g transform="translate(120 ${H.cy+hy}) scale(${hs}) translate(-120 ${-H.cy})">
+  ${T.ears==="floppy"?"":ears}
+  ${cheekF}
+  <ellipse cx="120" cy="${H.cy}" rx="${H.rx}" ry="${H.ry}" fill="${gB}" stroke="${line}" stroke-width="2.5"/>
+  <path d="M${120-18} ${H.cy-H.ry+3} q8 -12 12 -2 q6 -12 12 -1 q6 -10 10 3" fill="${gB}" stroke="${line}" stroke-width="2.5" stroke-linejoin="round"/>
+  ${T.ears==="floppy"?ears:""}
+  ${stripe}
+  <ellipse cx="120" cy="${MZ.cy}" rx="${MZ.rx}" ry="${MZ.ry}" fill="${shade(b)}" opacity=".55"/>
+  ${eyes}
+  <g transform="translate(0 ${MZ.dy})">${tongue}
+  <ellipse cx="120" cy="120" rx="11" ry="8" fill="${dark}"/><ellipse cx="116" cy="117" rx="3.5" ry="2" fill="#fff" opacity=".55"/><path d="M120 128 v6 M120 134 q-8 6 -14 0 M120 134 q8 6 14 0" stroke="${dark}" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  </g>
+`;
+  return `<svg viewBox="0 0 240 ${o.name?300:280}" xmlns="http://www.w3.org/2000/svg">
+  <defs><radialGradient id="${u}b" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="${tint(b,1.18)}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${tint(b,.82)}"/></radialGradient><radialGradient id="${u}e" cx="40%" cy="25%" r="85%"><stop offset="0" stop-color="${tint(e,1.15)}"/><stop offset="1" stop-color="${tint(e,.8)}"/></radialGradient></defs>
+  <g>${core}</g>${name}
+  ${o.wm?`<text x="120" y="160" font-size="22" text-anchor="middle" fill="rgba(140,100,64,.28)" font-weight="800" transform="rotate(-18 120 160)">멍냥공방 미리보기</text>`:""}
+  </svg>`;
+}
+
+/* 포인트 4색(몸 · 귀·무늬 · 검정 · 분홍)으로 못 담는 부분. lv 'no' = 못 담음, 'info' = 이렇게 나옴 */
+function limits(){
+  const L=[], fb=FIL.byId(S.fil.body), fe=FIL.byId(S.fil.ear);
+  if(S.mark==='chest'){
+    if(S.fil.body!=='white') L.push({lv:'no',what:'가슴 흰 털',why:`흰색이 다섯 번째 색이라 못 담아요. 가슴도 몸 색(${fb.name})으로 나와요`});
+    else L.push({lv:'info',what:'가슴 흰 털',why:'몸 색이 흰색이라 가슴 털이 따로 구분되어 보이지 않아요'});
+  }
+  const shared=['귀',S.stripe&&'이마 줄',S.mark==='back'&&'등 얼룩'].filter(Boolean);
+  if(S.fil.body===S.fil.ear) L.push({lv:'info',what:shared.join('·'),why:`몸과 같은 실 색(${fb.name})이라 색으로 구분되지 않고 모양으로만 보여요`});
+  else if(shared.length>1) L.push({lv:'info',what:shared.join('·'),why:`같은 실 색 하나(${fe.name})로 나와요. 서로 다른 색으로는 못 담아요`});
+  return L;
+}
+function limitsHtml(id,showOk,onlyNo){
+  const L=limits(), no=L.filter(x=>x.lv==='no'), info=L.filter(x=>x.lv==='info'), li=a=>a.map(x=>`<li><b>${x.what}</b> · ${x.why}</li>`).join('');
+  let h='';
+  if(no.length) h+=`<div class="limit no" id="${id}No"><b>포인트 4색으로 못 담는 부분</b><ul>${li(no)}</ul><div style="margin-top:6px">전체 색 피규어는 아직 열지 않았어요.</div></div>`;
+  if(info.length&&!onlyNo) h+=`<div class="limit info" id="${id}Info"><b>4색으로는 이렇게 나와요</b><ul>${li(info)}</ul></div>`;
+  if(!L.length&&showOk&&!onlyNo) h=`<div class="limit ok" id="${id}Ok">고른 특징은 포인트 4색(몸 · 귀·무늬 · 검정 · 분홍) 안에 다 들어가요</div>`;
+  return h;
+}
+
+/* 고른 값만 잠깐 바꿔서 그린 그림(고르기 카드용). 귀·얼굴은 얼굴만 크게, 몸집·털은 온몸 */
+function artWith(over,whole){const keep={};for(const k in over){keep[k]=S[k];S[k]=over[k];}const s=art();Object.assign(S,keep);return whole?s:s.replace('viewBox="0 0 240 280"','viewBox="12 0 216 182"');}
+
+/* 2 특징 3단계: ① 몸·털(체형 + 털) ② 귀·얼굴(귀 + 얼굴형) ③ 실 색 */
+const PK={build:{puppy:["아기 강아지","머리가 크고 몸이 작아요"],big:["큰 개","몸이 크고 다리가 길어요"]},coat:{short:["짧은 털","매끈한 윤곽"],fluffy:["복슬 털","볼·가슴·꼬리에 털 뭉치"]},
+  ears:{floppy:["접힌 귀","아래로 처진 귀"],upright:["쫑긋 귀","위로 선 귀"]},head:{round:["둥근 얼굴","동글동글"],wide:["넓적한 얼굴","옆으로 넓은 볼"]}};
+const QKEYS={1:["build","coat"],2:["ears","head"]}; // 단계마다 고르는 특징 둘. 둘 다 누르면 다음 단계로 넘어간다
+let TOUCH={};
+function mustCands(){const c=["build","coat","ears","head","eyes"];if(S.earSize!=="normal")c.push("earSize");if(S.muzzle!=="normal")c.push("muzzle");if(S.tongue)c.push("tongue");if(S.stripe)c.push("stripe");if(S.mark!=="none")c.push("mark");return c;}
+function setQ(n){Q=n;if(QKEYS[n])QKEYS[n].forEach(k=>TOUCH[k]=false);renderFeat();window.scrollTo(0,0);}
+function nextQ(){if(Q<3)setQ(Q+1);else make();}
+/* 가까운 실 후보: 사진에서 찍었으면 보정한 색에, 아니면 지금 고른 색에 가까운 3개. 색표에서 직접 고른 색이 후보 밖이면 맨 앞에 더한다 */
+function cands(k){
+  const list=FIL.near(S.adj[k]||S[k],3).map((f,i)=>({...f,first:i===0&&!!S.adj[k]}));
+  if(!list.some(f=>f.id===S.fil[k])) list.unshift({...FIL.byId(S.fil[k]),own:true});
+  return list;
+}
+function renderFeat(){
+  S.must=S.must.filter(m=>mustCands().includes(m));
+  document.querySelectorAll('.qdot').forEach(d=>{const q=+d.dataset.q;d.classList.toggle('on',q===Q);d.classList.toggle('done',q<Q);});
+  [1,2,3].forEach(q=>$('q'+q).classList.toggle('on',q===Q));
+  $('b2').textContent=Q===1?'다음 · ② 귀·얼굴':Q===2?'다음 · ③ 실 색':'이 실 색으로 캐릭터 보기';
+  /* ①② 고르기 카드: 한 단계의 둘을 다 누르면 바로 다음 단계로 */
+  document.querySelectorAll('.pick2').forEach(g=>{const k=g.dataset.pk, whole=k==='build'||k==='coat';g.querySelectorAll('.pk').forEach(c=>{const v=c.dataset.v;
+    c.innerHTML=artWith({[k]:v},whole)+PK[k][v][0]+`<small>${PK[k][v][1]}</small>`;c.classList.toggle('on',S[k]===v);
+    c.onclick=()=>{S[k]=v;TOUCH[k]=true;const q=Q;renderFeat();clearTimeout(renderFeat._t);
+      if(QKEYS[q]&&QKEYS[q].every(x=>TOUCH[x]))renderFeat._t=setTimeout(()=>{if(cur===2&&Q===q)setQ(q+1);},260);};});});
+  /* 특징 더 담기(접힘) */
+  document.querySelectorAll('.chips[data-k]').forEach(g=>{const k=g.dataset.k;g.querySelectorAll('.chip').forEach(c=>{const v=c.dataset.v;
+    c.classList.toggle('on',k==="toggles"?S[v]:S[k]===v);
+    c.onclick=()=>{if(k==="toggles")S[v]=!S[v];else S[k]=v;renderFeat();};});});
+  /* 가까운 실 후보 칩 3개 + (접힘) 실 색표 12색 */
+  $('filMat').textContent=`· ${FIL.MATERIAL} ${FIL.LIST.length}색 가운데`;
+  for(const k of ['body','ear']){
+    const B=k==='body', f=FIL.byId(S.fil[k]), near=S.adj[k]&&FIL.nearest(S.adj[k]).id;
+    $(B?'candBody':'candEar').innerHTML=cands(k).map(x=>`<div class="chip ${S.fil[k]===x.id?'on':''}" data-f="${x.id}" onclick="pickFil('${k}','${x.id}')">${dot(x.hex)}${x.name}${x.first?'<small>가장 가까움</small>':x.own?'<small>직접 고름</small>':''}</div>`).join('');
+    $(B?'filBody':'filEar').innerHTML=FIL.LIST.map(x=>`<div class="fil ${S.fil[k]===x.id?'on':''}" data-f="${x.id}" onclick="pickFil('${k}','${x.id}')"><i style="background:${x.hex}"></i>${x.name}</div>`).join('');
+    $(B?'filBodyName':'filEarName').innerHTML=`${dot(f.hex)} ${f.name} <span class="muted" style="font-weight:500">${!near?'':near===f.id?'· 찍은 색과 가장 가까운 실':'· 직접 바꿈'}</span>`;
+  }
+  $('limitLive').innerHTML=limitsHtml('limitLive',false,true); // 못 담는 것만 여기서(색을 고르는 때). 나머지 안내는 결과에서 한 번
+  $('mustPick').innerHTML=mustCands().map(m=>`<div class="chip ${S.must.includes(m)?'on must':''}" data-m="${m}" onclick="toggleMust('${m}')">${LABEL[m]().slice(1)}<span class="star">★</span></div>`).join('');
+  $('liveArt').innerHTML=art();
+}
+function pickFil(k,id){setFil(k,id);renderFeat();}
+function toggleMust(m){ if(S.must.includes(m)) S.must=S.must.filter(x=>x!==m); else if(S.must.length<3) S.must.push(m); else {toast('꼭 살릴 것은 3개까지예요');return;} renderFeat(); }
+$('memo').addEventListener('input',e=>S.memo=e.target.value.trim());
+function tune(){go(2);Q=3;renderFeat();$('fold').open=true;$('fold').scrollIntoView({block:'start'});}
+
+/* 3 만드는 중 */
+function make(){
+  go(3);
+  const steps=[...S.must.map(m=>LABEL[m]().slice(1)+" 살리는 중…"),"가진 실 색으로 맞추는 중…","사진이랑 나란히 대 보는 중…"];
+  const ul=$('makeList');ul.innerHTML=steps.map(s=>`<li>${s}</li>`).join('');
+  [...ul.children].forEach((li,i)=>setTimeout(()=>li.classList.add('done'),280*(i+1)));
+  setTimeout(()=>{if(cur===3)go(4);},280*(steps.length+1)+150);
+}
+
+/* 4 결과: 반반 카드 + 3D 시안 3각도(기본 = 매끈한 시안, '실물 모습(결)'은 토글) + 자랑 카드 + 5마리 고르기 놀이 */
+let REAL=false; // 3D 시안을 실물 모습(층 결·무광)으로 볼지. 4판: 처음은 매끈한 시안
+function setRealUi(){
+  document.querySelectorAll('#realSeg div').forEach(d=>d.classList.toggle('on',(d.dataset.r==='1')===REAL));
+  $('realMode').textContent=REAL?'실물 모습(결) 그림':'매끈한 시안 그림';
+}
+function setReal(v){REAL=!!v;setRealUi();if(R&&cur!==0)R.mesh.userData.setReal(REAL);}
+function setCmp(m){document.querySelectorAll('#cmpSeg div').forEach(d=>d.classList.toggle('on',d.dataset.m===m));$('half').style.display=m==='half'?'':'none';$('slideWrap').style.display=m==='slide'?'':'none';}
+function renderResult(){
+  $('nm1').textContent=S.name;
+  $('halfArt').innerHTML=art({wm:true});
+  $('cmpArt').innerHTML=art({wm:true});
+  $('mustBar2').innerHTML=S.must.map(m=>`<span>★ ${LABEL[m]()} 살림</span>`).join('');
+  $('memoEcho').innerHTML=S.memo?`꼭 넣을 것: <b>${esc(S.memo)}</b>`:'';
+  $('limit4').innerHTML=limitsHtml('limit4',true);
+  setAngleUi('front');setRealUi();
+  GAME_PICK=null;renderGame();
+  initThree('three4',{screen:4});
+}
+const ANG={front:0,side:-Math.PI/2,back:Math.PI};
+function setAngleUi(a){document.querySelectorAll('#ang .chip').forEach(c=>c.classList.toggle('on',c.dataset.a===a));}
+function setAngle(a){setAngleUi(a);if(R){R.view=a;R.target=ANG[a];}}
+
+/* "이 중에 우리 애는?" — 내 캐릭터 + 표본 강아지 4마리를 섞어 친구가 맞히게 하는 놀이(특징을 잘 골랐는지 손님이 직접 시험해 보는 꼴).
+   다른 4마리는 틀 파일의 프리셋(같은 틀)에서 온다. 자리는 이름으로 정해져서 같은 아이는 늘 같은 카드가 나온다 */
+const DECOY=['콩떡','두부','보리','설기','모찌'];
+const GAME_DIFF=FEAT_KEYS.filter(k=>!['ears','earSize','eyes','mark','tongue'].includes(k)); // 5판: 놀이에서 다른 4마리가 다르게 가지는 것(그 밖의 귀·눈·색은 내 아이와 같다 → 정말 닮음 시험)
+function presetState(n){const p=SPEC.presets[n],t={...S,name:n,fil:{...S.fil}};GAME_DIFF.forEach(k=>t[k]=p[k]);return t;}
+function gameSet(){
+  const others=DECOY.map(presetState).filter(t=>!GAME_DIFF.every(k=>t[k]===S[k])).slice(0,4);
+  let h=7;for(const ch of S.name)h=(h*31+ch.charCodeAt(0))>>>0;
+  const at=h%5,cells=[...others];cells.splice(at,0,null);
+  return {answer:'ABCDE'[at],cells:cells.map((t,i)=>({letter:'ABCDE'[i],mine:!t,s:t||S}))};
+}
+let GAME_PICK=null;
+const gameQ=()=>`이 중에 ${S.name}${josa(S.name,'은','는')}?`;
+async function renderGame(){
+  $('gameTitle').textContent=gameQ();
+  try{await loadSpec();}catch(e){$('game5').innerHTML='<div class="muted" style="grid-column:1/-1">틀 파일을 못 읽었어요(서버로 열어야 해요)</div>';return;}
+  if(cur!==4) return;
+  const g=gameSet();
+  $('game5').innerHTML=g.cells.map(c=>`<div class="gc ${GAME_PICK===c.letter?(c.mine?'hit':'miss'):''}" data-l="${c.letter}" data-mine="${c.mine?1:0}" onclick="gamePick('${c.letter}')">${art({s:c.s})}${c.letter}</div>`).join('');
+  $('gameMsg').innerHTML=!GAME_PICK?'하나를 눌러 보세요 · 다른 4마리는 귀·색이 같은 비슷한 표본 강아지예요(체형·털·주둥이·얼굴형이 조금씩 달라요)'
+    :GAME_PICK===g.answer?`<b class="fine">정답!</b> ${g.answer}가 ${esc(S.name)}${josa(S.name,'이에요','예요')}. 친구도 맞히는지 카드를 보내 보세요`
+    :`<b class="re">땡!</b> ${GAME_PICK}는 다른 강아지예요. 다시 골라 보세요`;
+}
+function gamePick(l){GAME_PICK=l;renderGame();}
+
+/* 자랑 카드: 사진 | 캐릭터 + 고른 특징 태그 (인스타 스토리 9:16). 폰 안에서만 만들고 어디에도 올리지 않음 */
+function svgImg(svg){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
+function coverDraw(c,img,x,y,w,h,r,py){try{c.save();c.beginPath();c.roundRect(x,y,w,h,r);c.clip();const iw=img.naturalWidth,ih=img.naturalHeight,sc=Math.max(w/iw,h/ih);c.drawImage(img,x+(w-iw*sc)/2,y+(h-ih*sc)*py,iw*sc,ih*sc);c.restore();}catch(e){c.restore();}}
+async function cardImage(){
+  const W=1080,H=1920,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+  c.fillStyle='#F6F0E6';c.fillRect(0,0,W,H);
+  c.fillStyle='#3A2E26';c.font='800 64px "Apple SD Gothic Neo",sans-serif';c.textAlign='center';
+  c.fillText(`${S.name}, 캐릭터가 됐어요`,W/2,170);
+  const photo=$('cmpPhoto');
+  const card=(x,y,w,h,r)=>{c.save();c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle='#FFFDF9';c.fill();c.restore();};
+  card(60,240,465,700,36);card(555,240,465,700,36);
+  coverDraw(c,photo,60,240,465,700,36,.25);
+  const svg=art({name:true}).replace('<svg ','<svg width="440" height="550" ');
+  const im=await svgImg(svg);c.drawImage(im,567,300,440,550);
+  c.font='700 34px "Apple SD Gothic Neo",sans-serif';c.fillStyle='#7C6A5C';c.fillText('사진',292,995);c.fillText('멍냥공방 캐릭터',787,995);
+  c.font='800 46px "Apple SD Gothic Neo",sans-serif';c.fillStyle='#B4572E';
+  S.must.forEach((m,i)=>c.fillText('★ '+LABEL[m]()+' 살림',W/2,1110+i*76));
+  c.font='600 38px "Apple SD Gothic Neo",sans-serif';c.fillStyle='#3A2E26';c.fillText('우리 애 특징을 골라 담은 캐릭터',W/2,1460);
+  c.fillStyle='#D9774B';c.beginPath();c.roundRect(240,1560,600,110,55);c.fill();
+  c.fillStyle='#fff';c.font='800 44px "Apple SD Gothic Neo",sans-serif';c.fillText('우리 애도 만들어 보기',W/2,1632);
+  c.fillStyle='#8C6440';c.font='800 40px "Apple SD Gothic Neo",sans-serif';c.fillText('멍냥공방',W/2,1800);
+  return cv.toDataURL('image/png');
+}
+/* 놀이 카드: 사진 한 칸 + 캐릭터 5마리(A~E). 답은 적지 않는다(친구가 맞히게) */
+async function gameImage(){
+  await loadSpec();
+  const g=gameSet(),W=1080,H=1920,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+  c.fillStyle='#F6F0E6';c.fillRect(0,0,W,H);
+  c.textAlign='center';c.fillStyle='#3A2E26';c.font='800 76px "Apple SD Gothic Neo",sans-serif';c.fillText(gameQ(),W/2,160);
+  c.font='600 36px "Apple SD Gothic Neo",sans-serif';c.fillStyle='#7C6A5C';c.fillText('사진 속 아이를 캐릭터 다섯 가운데서 찾아 주세요',W/2,226);
+  const card=(x,y,w,h,r,f)=>{c.save();c.beginPath();c.roundRect(x,y,w,h,r);c.fillStyle=f||'#FFFDF9';c.fill();c.restore();};
+  card(330,280,420,520,36);coverDraw(c,$('cmpPhoto'),330,280,420,520,36,.2);
+  c.font='700 30px "Apple SD Gothic Neo",sans-serif';c.fillStyle='#7C6A5C';c.fillText('사진',W/2,846);
+  const pos=[[60,890],[390,890],[720,890],[225,1300],[555,1300]];
+  for(let i=0;i<5;i++){
+    const [x,y]=pos[i],cell=g.cells[i];card(x,y,300,380,30);
+    const im=await svgImg(art({s:cell.s}).replace('<svg ','<svg width="264" height="308" '));c.drawImage(im,x+18,y+8,264,308);
+    c.fillStyle='#D9774B';c.beginPath();c.arc(x+150,y+338,28,0,7);c.fill();
+    c.fillStyle='#fff';c.font='800 34px "Apple SD Gothic Neo",sans-serif';c.fillText(cell.letter,x+150,y+350);
+  }
+  c.fillStyle='#3A2E26';c.font='700 38px "Apple SD Gothic Neo",sans-serif';c.fillText('몇 번일까요? 답을 보내 주세요',W/2,1760);
+  c.fillStyle='#8C6440';c.font='800 40px "Apple SD Gothic Neo",sans-serif';c.fillText('멍냥공방',W/2,1840);
+  return {url:cv.toDataURL('image/png'),answer:g.answer};
+}
+function showSave(url,file,note){
+  const t=$('toast');
+  t.innerHTML=`<img src="${url}" style="width:220px;border-radius:12px;display:block;margin:0 auto 10px"><a href="${url}" download="${file}" style="color:#FBE3D5;font-weight:700">이미지 저장하기</a><br><span style="font-size:12px;opacity:.8">${note}</span>`;
+  t.style.display='block';clearTimeout(t._t);t.onclick=e=>{if(e.target.tagName!=='A')t.style.display='none'};
+}
+async function shareCard(){ showSave(await cardImage(),`${esc(S.name)}-멍냥공방.png`,'폰에서는 그림을 길게 눌러 저장 · 맛보기라 어디에도 올리지 않아요'); }
+async function shareGame(){ const g=await gameImage(); showSave(g.url,`${esc(S.name)}-찾기-멍냥공방.png`,`정답은 ${g.answer} · 카드에는 답이 적혀 있지 않아요 · 맛보기라 어디에도 올리지 않아요`); }
+
+/* 5 굿즈: 피규어 한 장 + 디지털 한 줄(살 때 4,900 차감) + 알림 신청 칩 한 줄(키링 · 전체 색, 값 없음) */
+const GOODS=[
+ {id:"digital",tier:"피규어 미리보기",name:"디지털 파일",sub:"고화질 · 배경 투명",price:4900},
+ {id:"figure",tier:"주문 가능",name:"포인트 색 3D 피규어",sub:"공방 직접 출력",price:59000}
+];
+const FIG=GOODS[1];
+let G="figure";
+function filLine(){const n=k=>FIL.byId(S.fil[k]).name;return `몸 ${dot(S.body)}${n('body')} · 귀·무늬 ${dot(S.ear)}${n('ear')} · 코·눈 ${dot(FILC.black)}검정`+(S.tongue?` · 혀 ${dot(FILC.pink)}분홍`:'');}
+function renderGoods(){
+  const f=FIG, d=GOODS[0];
+  $('goods').innerHTML=`
+  <div class="tier hero" data-id="figure" onclick="selectGoods('figure')">
+    <div class="radio"></div>
+    <span class="tn">${f.tier}</span>
+    <h3>${f.name}</h3>
+    <div class="muted" id="figFil">실 4색 · ${filLine()} · 받침에 '${esc(S.name)}' 새김</div>
+    <div class="stage"><canvas id="three5"></canvas><span class="tag" style="left:8px;top:8px">도색 없음 · 결 보임</span></div>
+    <div class="sizecap"><span id="figH">피규어 높이 약 ${figCm()}cm</span><span>500원 동전(지름 26.5mm)과 같은 축척</span></div>
+    <div class="incl" id="incl"><b>포함</b> 3D 시안·수정 1회 · 받침 이름 새김 · 발송 전 실물 사진 · 무료 배송</div>
+    <div class="arrive" id="arrive">${SCHED}<small>아직 출력 시간을 재지 않아 도착 날짜는 정하지 않았어요</small></div>
+    <ul>
+      <li>특징을 골라 만들고, <b>확정한 시안 그대로</b> 받아요 · 확정 전 100% 취소</li>
+      <li>디지털 파일 <b>무료 포함</b></li>
+    </ul>
+    <div class="pr">${won(f.price)} <small>배송비 무료</small></div>
+  </div>
+  <div class="tier line" data-id="digital" onclick="selectGoods('digital')">
+    <div class="radio"></div>
+    <div id="digiDesc"><b>${d.name}만 먼저 · ${won(d.price)}</b> <span class="muted">캐릭터 그림 · 피규어를 살 때 ${won(d.price)} 차감</span></div>
+  </div>
+  <p class="muted"><span class="badge">표본·미완</span> 3D 그림은 실제 출력용 틀(같은 치수)을 그린 시안이에요. 출력·실물 사진·도착 일정은 아직 시험 전이에요.</p>`;
+  selectGoods(G);
+  initThree('three5',{screen:5,coin:true});
+}
+function selectGoods(id){
+  G=id;const g=GOODS.find(x=>x.id===id);
+  document.querySelectorAll('#goods .tier').forEach(t=>t.classList.toggle('on',t.dataset.id===id));
+  S.order={...g};
+  $('b5').textContent=`${g.name} ${won(g.price)} · 주문 확인하기`;
+}
+function toOrder(){ go(6); }
+
+/* 3D 시안 — figure-spec.json(출력 파일과 같은 틀)을 sculpt.js 가 '녹여 붙인 한 몸'으로 빚는다(figure/sculpt.py 와 같은 규칙) */
+function resolveParts(spec,feat){ return MnSculpt.resolveParts(spec,feat); }
+let R=null, BUILT=null; // BUILT = 마지막으로 빚은 모양(특징이 같으면 다시 빚지 않고 색만 바꾼다)
+const figCm=()=>BUILT&&BUILT.hcm?BUILT.hcm:'6.8'; // 피규어 높이(cm): 빚은 모양에서 잰다(아직 안 빚었으면 흰둥이 값)
+function stopThree(){ if(R){cancelAnimationFrame(R.raf);R.scene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose();}});R.renderer.dispose();R=null;} }
+function coinFace(){ // 500원 동전 앞면 그림(숫자만). 지름 26.5mm 를 같은 장면에 같은 단위(mm)로 둔다
+  const cv=document.createElement('canvas');cv.width=cv.height=256;const c=cv.getContext('2d');
+  c.fillStyle='#CFCDC6';c.beginPath();c.arc(128,128,128,0,7);c.fill();
+  c.strokeStyle='#A9A7A0';c.lineWidth=7;c.beginPath();c.arc(128,128,114,0,7);c.stroke();
+  c.fillStyle='#8B8982';c.textAlign='center';c.font='800 96px -apple-system,"Apple SD Gothic Neo",sans-serif';c.fillText('500',128,150);
+  c.font='700 30px -apple-system,"Apple SD Gothic Neo",sans-serif';c.fillText('원',128,192);
+  return cv;
+}
+async function initThree(id,opt){
+  opt=opt||{};stopThree();
+  const cv=$(id); if(!cv) return;
+  const fail=msg=>{cv.parentNode.innerHTML=`<p class="muted" style="padding:16px;text-align:center">${msg}</p>`;};
+  if(!SPEC){ try{await loadSpec();}catch(e){SPEC_P=null;fail('틀 파일을 못 읽었어요(서버로 열어야 해요)');return;} }
+  if(cur!==opt.screen||!cv.isConnected) return; // 읽는 사이 화면이 바뀜
+  const t0=performance.now();
+  const W=cv.clientWidth,H=cv.clientHeight;
+  let renderer; try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});}catch(e){fail('이 기기에서는 3D 시안을 그리지 못해요');return;}
+  renderer.setPixelRatio(Math.min(2,devicePixelRatio));renderer.setSize(W,H,false);
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  const scene=new THREE.Scene();
+  let cam; const ly=opt.lookY||33;
+  if(opt.coin){const hh=47,hw=hh*W/H;cam=new THREE.OrthographicCamera(-hw,hw,hh,-hh,1,1000);cam.position.set(0,58,190);cam.lookAt(0,33,0);} // 크기 비교는 원근 없이(같은 축척)
+  else{cam=new THREE.PerspectiveCamera(30,W/H,1,1000);cam.position.set(0,56,190);cam.lookAt(0,ly,0);}
+  scene.add(new THREE.HemisphereLight(0xffffff,0xcbb59a,.70));
+  const d=new THREE.DirectionalLight(0xffffff,.46);d.position.set(-70,130,120);d.castShadow=true;d.shadow.mapSize.set(1024,1024);
+  Object.assign(d.shadow.camera,{left:-70,right:70,top:70,bottom:-70,near:10,far:400});d.shadow.radius=4;scene.add(d);
+  const rim=new THREE.DirectionalLight(0xfff0dc,.14);rim.position.set(90,60,-120);scene.add(rim);
+  // 포인트 색 = AMS 4칸(몸·귀무늬·검정·분홍), 모두 실 색표의 색. 가슴 흰 털·받침 색은 전체 색(아직 안 엶)에서만
+  const col={body:S.body,ear:S.ear,patch:S.ear,chest:S.body,nose:FILC.black,eye:FILC.black,tongue:FILC.pink,base:S.body};
+  const feat={};FEAT_KEYS.forEach(k=>feat[k]=S[k]);
+  const key=JSON.stringify(feat);
+  if(!BUILT||BUILT.key!==key){ // 특징이 바뀌면 다시 빚는다
+    BUILT=MnSculpt.build(SPEC,feat,{mode:'point'});BUILT.key=key;
+    let zm=0;for(let i=2;i<BUILT.positions.length;i+=3)if(BUILT.positions[i]>zm)zm=BUILT.positions[i];
+    BUILT.hcm=(zm/10).toFixed(1);
+  }
+  if($('figH'))$('figH').textContent=`피규어 높이 약 ${figCm()}cm`;
+  const colors=Object.fromEntries(SPEC.sculpt.slots.point.map(s=>[s.name,col[s.color]]));
+  const real=opt.real!==undefined?!!opt.real:REAL; // 실물 모습(층 결·무광)
+  const mesh=MnSculpt.three(THREE,BUILT,colors,{real});mesh.castShadow=true;
+  const g=new THREE.Group();g.rotation.x=-Math.PI/2;g.add(mesh); // 틀은 z가 위
+  const spin=new THREE.Group();spin.add(g);scene.add(spin);
+  let coin=null;
+  if(opt.coin){
+    spin.position.x=-17;
+    coin=new THREE.Group();
+    const edge=new THREE.Mesh(new THREE.CylinderGeometry(13.25,13.25,1.9,64),new THREE.MeshStandardMaterial({color:0xC4C2BB,roughness:.5,metalness:.15}));edge.rotation.x=Math.PI/2;edge.castShadow=true;
+    const face=new THREE.Mesh(new THREE.CircleGeometry(13.25,64),new THREE.MeshStandardMaterial({map:new THREE.CanvasTexture(coinFace()),roughness:.55,metalness:.1}));face.position.z=0.97;
+    coin.add(edge,face);coin.position.set(26.5,13.25,0);coin.rotation.y=-0.12;scene.add(coin); // 반지름 13.25mm = 지름 26.5mm, 바닥에 세움
+  }
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(400,400),new THREE.ShadowMaterial({opacity:.16}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+  let drag=null;
+  const a0=opt.coin?-0.35:(opt.angle||0);
+  R={renderer,scene,cam,mesh,coin,ang:a0,target:a0,view:opt.coin?'compare':'front',frames:0};
+  const me=R;
+  cv.onpointerdown=e=>{drag=e.clientX;try{cv.setPointerCapture(e.pointerId)}catch(_){}};
+  cv.onpointermove=e=>{if(drag!==null){me.target+=(e.clientX-drag)*0.012;me.ang=me.target;drag=e.clientX;me.view='free';if(opt.screen===4)setAngleUi('');}};
+  cv.onpointerup=cv.onpointercancel=()=>drag=null;
+  me.tick=()=>{me.ang+=(me.target-me.ang)*0.16;spin.rotation.y=me.ang;renderer.render(scene,cam);me.frames++;}; // 한 장 그리기(검사는 이것을 직접 불러 화면이 가려져 있어도 돌려 본다)
+  const loop=()=>{if(R!==me)return;me.tick();me.raf=requestAnimationFrame(loop)};loop();
+  cv.dataset.buildMs=Math.round(BUILT.ms);cv.dataset.ms=Math.round(performance.now()-t0); // 빚는 시간 · 첫 그림까지 걸린 시간(ms)
+}
+/* 검사용: 지금 3D 그림의 밝기 합(실물 모습을 켜고 끌 때 그림이 실제로 달라지는지 본다) */
+function threeSig(){ if(!R)return 0; R.renderer.render(R.scene,R.cam); const src=R.renderer.domElement,c=document.createElement('canvas');c.width=160;c.height=120;const x=c.getContext('2d');x.drawImage(src,0,0,160,120);const d=x.getImageData(0,0,160,120).data;let n=0;for(let i=0;i<d.length;i+=4)if(d[i+3]>40)n+=d[i]+d[i+1]+d[i+2];return n; }
+/* 검사용: 지금 3D 그림에 무엇이든 그려졌는지(투명하지 않은 점 수) */
+function threeInk(){ if(!R)return 0; R.renderer.render(R.scene,R.cam); const src=R.renderer.domElement,c=document.createElement('canvas');c.width=80;c.height=60;const x=c.getContext('2d');x.drawImage(src,0,0,80,60);const d=x.getImageData(0,0,80,60).data;let n=0;for(let i=3;i<d.length;i+=4)if(d[i]>40)n++;return n; }
+
+/* 6 주문 확인: 시안 확정 흐름 · 실 색 · 4색 안내 · 선물 · 안전 · 제작 기준 · 공개 제작 조건과 동의(4판: 조건 문구는 여기에만) */
+function chk6(){const fig=(S.order||FIG).id==='figure',sf=$('agreeSafe');$('b6').disabled=!($('agree').checked&&(!fig||(sf&&sf.checked)));} // 필수 체크는 둘(주문 제작 동의 · 안전 안내 확인). 공개 제작은 선택
+function renderOrder(){
+  const o=S.order||FIG, fig=o.id==='figure';
+  const when=fig?`${SCHED}`:'결제 즉시 받기';
+  $('orderKv').innerHTML=`<div>아이</div><div><b>${esc(S.name)}</b> · ${S.must.map(m=>LABEL[m]()).join(' ')}</div>`
+    +(S.memo?`<div>꼭 넣을 것</div><div>${esc(S.memo)}</div>`:'')
+    +`<div>상품</div><div>${o.name} <span class="muted">· ${fig?'디지털 파일 무료 포함':'피규어 미리보기'}</span></div>`
+    +`<div>실 색</div><div id="orderFil">${filLine()}</div>`
+    +(fig?`<div>실물</div><div>${FIL.MATERIAL} · 도색 없음 · 결 보임</div>`:'')
+    +`<div>상품값</div><div>${won(o.price)}</div><div>배송비</div><div>${fig?'무료':'없음(파일)'}</div><div>일정</div><div id="orderWhen">${when}</div><div>최종</div><div><b>${won(o.price)}</b> <span class="muted">· 정기결제 아님</span></div>`;
+  $('payAmt').textContent=won(o.price);
+  $('limit6').innerHTML='';
+  $('orderFlow').innerHTML=fig?`<div class="card" id="flowCard"><b>이렇게 진행돼요</b>
+    <ol class="flow" id="flow">
+      <li>결제<small>지금 · 정기결제 아님, 이번 한 번</small></li>
+      <li class="key">1~2일 안에 3D 시안을 보내 드려요<small>무료 수정 1회</small></li>
+      <li class="key">확정하면 출력<small>'시안 확정'을 누르신 뒤에만 출력을 시작해요</small></li>
+      <li>발송 전 실물 사진<small>다 만든 피규어 사진을 먼저 보내 드려요</small></li>
+      <li>발송<small>${SCHED}</small></li>
+    </ol>
+    <div class="cancel" id="cancelLine">시안 확정 전에는 언제든 100% 취소돼요</div></div>`
+   :`<div class="card" id="flowCard"><b>이렇게 진행돼요</b><ol class="flow" id="flow"><li>결제<small>정기결제 아님, 이번 한 번</small></li><li class="key">바로 받기<small>'내 주문'에서 파일을 받아요</small></li></ol><div class="cancel">나중에 피규어를 사면 이번 ${won(o.price)}을 빼 드려요</div></div>`;
+  $('orderGift').innerHTML=fig?`<div class="card" id="giftCard" style="padding:12px 14px"><label class="chk" style="margin:0"><input type="checkbox" id="gift" ${S.gift?'checked':''} onchange="S.gift=this.checked;document.getElementById('giftBox').style.display=this.checked?'':'none'"> <span><b>선물 포장으로 보내기</b><br><span class="muted">금액이 적히지 않은 카드를 넣어 드려요 · 추가 금액 없음</span></span></label>
+    <div id="giftBox" style="display:${S.gift?'':'none'};margin-top:10px"><input class="txt" id="giftTo" maxlength="12" placeholder="받는 분 이름" value="${esc(S.giftTo)}" oninput="S.giftTo=this.value.trim()"></div></div>`:'';
+  $('orderSafe').innerHTML=fig?`<label class="chk safe" id="safe"><input type="checkbox" id="agreeSafe" onchange="chk6()"> <span><b>안전 안내를 확인했어요</b><br>장식용 · 차 안·햇볕에 두지 마세요(PLA는 60°C 안팎에서 물러짐) · 반려동물이 씹지 않게</span></label>`:'';
+  $('orderStd').innerHTML=fig?`<details class="fold" id="std6"><summary>제작 기준 보기 <small>불량 합격표</small></summary>${qcHtml('t6')}</details>`:'';
+  $('orderPub').innerHTML=fig?`<div class="card" id="pubCard" style="padding:12px 14px"><span class="pill pub">첫 ${PUB.seats}자리 공개 제작 · 선택</span>
+    <div class="optnote">제작 과정을 영상으로 남기는 <b>첫 ${PUB.seats}자리</b>에 함께해 주실 분만 체크해 주세요. <b>안 하셔도 값(${won(o.price)})·일정은 똑같아요</b> · 할인도 조건도 아니에요. 주소·연락처·사람 얼굴은 영상에 나오지 않아요.</div>
+    <label class="chk" id="pubChk" style="margin:10px 0 0"><input type="checkbox" id="agreePub"> <span>(선택) 제작 과정을 영상으로 공개해도 좋아요.</span></label></div>`:'';
+  $('agreeTxt').textContent=fig?'우리 아이만을 위한 주문 제작이라, 시안을 확정해 출력을 시작한 뒤에는 단순 변심 취소·환불이 어려운 것을 확인했어요. (확정 전 100% 취소 · 파손이거나 불량 합격표의 재출력 기준이면 7일 안에 다시 만들거나 환불)'
+    :'디지털 파일은 받은 뒤에는 취소·환불이 어려운 것을 확인했어요.';
+  $('agree').checked=false;$('b6').disabled=true;
+}
+function pay(){ S.paid={...S.order,ship:0,at:new Date()}; go(7); } // 시험: 실제 결제 없음, 어디에도 보내지 않음
+
+/* 7 내 주문(시험): 진행 4단계 · 디지털 바로 받기 */
+function renderMine(){
+  const o=S.paid||{...FIG,ship:0,at:new Date()}, fig=o.id==='figure';
+  const steps=[["시안","3D 시안 준비 중"],["출력","확정 뒤 시작"],["검수","실물 사진 보냄"],["발송","일정 확정 뒤"]];
+  const up=FIG.price-o.price;
+  $('mine').innerHTML=`
+  <div class="card"><div class="kv">
+    <div>아이</div><div><b>${esc(S.name)}</b></div>
+    <div>상품</div><div>${o.name}</div>
+    <div>실 색</div><div>${filLine()}</div>
+    <div>금액</div><div>${won(o.price+o.ship)} <span class="muted">· 시험이라 결제되지 않았어요</span></div>
+    ${S.memo?`<div>꼭 넣을 것</div><div>${esc(S.memo)}</div>`:''}
+    ${S.gift&&fig?`<div>선물</div><div>선물 포장 · 금액 없는 카드${S.giftTo?' · 받는 분 '+esc(S.giftTo):''}</div>`:''}
+  </div></div>
+  ${fig?`<div class="card" id="progCard"><b>지금 어디쯤이에요?</b>
+    <div class="prog" id="prog">${steps.map((s,i)=>`<div class="p ${i===0?'now':''}"><i>${i+1}</i>${s[0]}</div>`).join('')}</div>
+    <div style="font-size:14px;line-height:1.55"><b>1단계 · 시안 준비 중</b><br>1~2일 안에 3D 시안을 보내 드려요. 무료 수정 1회, 확정하시면 출력을 시작해요.</div>
+    <div class="cancel">지금은 시안 확정 전 · 100% 취소돼요</div>
+    <div class="muted" id="mineWhen" style="margin-top:8px">출력 → 검수(발송 전 실물 사진) → 발송 · ${SCHED}</div></div>`
+   :`<div class="card" id="progCard"><b>파일이 준비됐어요</b><div class="muted">피규어 미리보기예요. 나중에 피규어를 사면 이번 ${won(o.price)}을 빼고 ${won(up)}</div></div>`}
+  <div class="card" id="digiCard"><b>디지털 파일</b> <span class="muted">${fig?'· 피규어 주문에 무료 포함':'· 피규어 미리보기'}</span>
+    <button class="btn sm" id="bDigi" style="margin-top:10px" onclick="receiveDigital()">디지털 파일 바로 받기</button>
+    <div id="digiBox"></div>
+    <div class="muted" style="margin-top:6px"><span class="badge">표본</span> 시험에서는 자랑 카드와 같은 그림을 저장해요. 고화질·배경 투명 파일은 출시 때 넣어요.</div></div>`;
+}
+async function receiveDigital(opt){
+  const url=await cardImage();
+  $('digiBox').innerHTML=`<img id="digiImg" src="${url}" alt="디지털 파일 미리보기" style="width:150px;border-radius:12px;display:block;margin:12px auto 8px;border:1px solid var(--line)"><div style="text-align:center"><a id="digiLink" href="${url}" download="${esc(S.name)}-멍냥공방.png" style="color:var(--accent);font-weight:700">이미지 저장하기</a><div class="muted">저장이 안 되면 그림을 길게 눌러 저장해요</div></div>`;
+  if(!(opt&&opt.noDownload)) $('digiLink').click(); // 바로 저장(검사 때는 파일을 내려받지 않음)
+}
+renderHome();
+window.MN={S,PUB,COST,QC,FIL,EXPO,FEAT_KEYS,SCHED,GAME_DIFF,get R(){return R},get REAL(){return REAL},get SPEC(){return SPEC},get BUILT(){return BUILT}}; // 검사용(check.html 이 지금 상태를 읽음)
+</script>
+</body>
+</html>
