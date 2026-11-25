@@ -829,6 +829,55 @@
       gap: 10px;
     }
 
+    /* Comparison Table */
+    .compare-shell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .compare-table th, .compare-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .compare-table thead th {
+      background: var(--surface-soft);
+      font-size: 13px;
+      font-weight: 850;
+      color: var(--ink-secondary);
+    }
+    .compare-table thead th.highlight {
+      background: #0f172a;
+      color: #fff;
+    }
+    .compare-table tbody tr:last-child td { border-bottom: none; }
+    .compare-table td.metric {
+      font-weight: 800;
+      color: var(--ink);
+      width: 24%;
+    }
+    .compare-table td.old-way {
+      color: var(--ink-muted);
+      width: 36%;
+    }
+    .compare-table td.new-way {
+      background: #f0fdf4;
+      color: #065f46;
+      font-weight: 800;
+      width: 40%;
+    }
+    @media (max-width: 720px) {
+      .compare-table th, .compare-table td { padding: 12px 12px; font-size: 12.5px; }
+    }
+
     /* Value Grid */
     .value-grid {
       display: grid;
@@ -1042,6 +1091,7 @@
       </a>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#tools" data-i18n="nav_tools">무료 계산기</a>
+        <a href="demo.html?app=staydesk&lang=ko" id="nav-demo-link" data-i18n="nav_demo">1분 라이브 데모</a>
         <a href="#solodesk" data-i18n="nav_solodesk">SoloDesk Studio</a>
         <a href="#staydesk" data-i18n="nav_staydesk">StayDesk Pro</a>
         <a href="#faq" data-i18n="nav_faq">FAQ</a>
@@ -1068,6 +1118,7 @@
         </p>
         <div class="hero-actions">
           <a href="#tools" class="btn btn-primary" data-i18n="hero_cta_tools">무료 계산기 바로 쓰기 ↓</a>
+          <a href="demo.html?app=staydesk&lang=ko" id="hero-demo-btn" class="btn btn-emerald" data-i18n="hero_cta_demo">⚡ 1분 라이브 데모 체험</a>
           <a href="#solodesk" class="btn btn-outline" data-i18n="hero_cta_products">평생소장 웹앱 구경하기</a>
         </div>
         <div class="trust-strip">
@@ -1301,6 +1352,7 @@
             <div class="cta-row">
               <button type="button" class="btn btn-indigo" data-buy="solodesk_kr" data-i18n="solo_cta_kr">국내 구매 안내 (₩19,000)</button>
               <button type="button" class="btn btn-outline" data-buy="solodesk_en" data-i18n="solo_cta_en">Global Gumroad ($19)</button>
+              <a href="demo.html?app=solodesk&lang=ko" class="btn btn-outline demo-link" data-demo-app="solodesk" data-i18n="cta_live_demo">⚡ 1분 체험</a>
             </div>
           </div>
         </div>
@@ -1338,6 +1390,7 @@
             <div class="cta-row">
               <button type="button" class="btn btn-emerald" data-buy="staydesk_std" data-i18n="stay_cta_std">호스트 평생소장 구매 (₩29,000)</button>
               <button type="button" class="btn btn-outline" data-buy="staydesk_team" data-i18n="stay_cta_team">청소팀 5인 라이선스 (₩59,000)</button>
+              <a href="demo.html?app=staydesk&lang=ko" class="btn btn-outline demo-link" data-demo-app="staydesk" data-i18n="cta_live_demo">⚡ 1분 체험</a>
             </div>
           </div>
 
@@ -1353,6 +1406,50 @@
               <button type="button" class="gallery-tab emerald" data-img-ko="assets/staydesk-inventory.png" data-img-en="assets/staydesk-inventory-en.png" data-i18n="stay_tab_4">비품·에어커버</button>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before vs After Cost & Speed Comparison -->
+    <section id="compare">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker emerald" data-i18n="cmp_kicker">ROI &amp; COST SAVINGS</span>
+          <h2 data-i18n="cmp_title">매달 내던 구독료와 엑셀 노가다, 1년이면 얼마나 절약될까요?</h2>
+          <p data-i18n="cmp_desc">커피 4~5잔 값 1회 결제로 매년 수십만 원의 고정비와 반복 업무 시간을 아끼세요.</p>
+        </div>
+        <div class="compare-shell">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th data-i18n="cmp_h1">비교 항목</th>
+                <th data-i18n="cmp_h2">기존 방식 (월 구독 SaaS · 엑셀/카톡 수작업)</th>
+                <th class="highlight" data-i18n="cmp_h3">DeskKit Studio (1회 결제 평생소장)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="metric" data-i18n="cmp_r1_m">1년 유지 비용</td>
+                <td class="old-way" data-i18n="cmp_r1_o">월 2.5만~6만 원 (연 30만~72만 원 계속 지출)</td>
+                <td class="new-way" data-i18n="cmp_r1_n">✓ ₩19,000~₩29,000 단 1회 (2년차부터 0원)</td>
+              </tr>
+              <tr>
+                <td class="metric" data-i18n="cmp_r2_m">업무 소요 시간</td>
+                <td class="old-way" data-i18n="cmp_r2_o">건당 10~15분 (엑셀 수정 · 카톡 복붙 · 번역)</td>
+                <td class="new-way" data-i18n="cmp_r2_n">✓ 30초 완성 (1클릭 복사 · 즉시 A4 PDF 출력)</td>
+              </tr>
+              <tr>
+                <td class="metric" data-i18n="cmp_r3_m">서식 안정성</td>
+                <td class="old-way" data-i18n="cmp_r3_o">Mac ↔ Windows 이동 시 엑셀 줄바꿈·여백 깨짐</td>
+                <td class="new-way" data-i18n="cmp_r3_n">✓ 모든 OS 브라우저에서 100% 동일한 A4 출력</td>
+              </tr>
+              <tr>
+                <td class="metric" data-i18n="cmp_r4_m">데이터 보안</td>
+                <td class="old-way" data-i18n="cmp_r4_o">외부 클라우드 서버 저장 · 해지 시 접근 차단</td>
+                <td class="new-way" data-i18n="cmp_r4_n">✓ 내 PC 100% 로컬 저장 · 오프라인 평생 실행</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -1573,6 +1670,7 @@
     const I18N = {
       ko: {
         nav_tools: '무료 계산기',
+        nav_demo: '1분 라이브 데모',
         nav_solodesk: 'SoloDesk Studio',
         nav_staydesk: 'StayDesk Pro',
         nav_faq: 'FAQ',
@@ -1580,7 +1678,27 @@
         hero_title: '매달 빠져나가는 구독료 없이,<br />평생 소장하는 실무 웹앱',
         hero_lead: '프리랜서 3.3%·부가세 계산부터 숙박 호스트 청소·순수익 관리까지.<br />아래 무료 계산기로 바로 계산해 보고, 단 1회 결제로 평생 쓰는 완제품 스튜디오를 만나보세요.',
         hero_cta_tools: '무료 계산기 바로 쓰기 ↓',
+        hero_cta_demo: '⚡ 1분 라이브 데모 체험',
         hero_cta_products: '평생소장 웹앱 구경하기',
+        cta_live_demo: '⚡ 1분 체험',
+        cmp_kicker: 'ROI & COST SAVINGS',
+        cmp_title: '매달 내던 구독료와 엑셀 노가다, 1년이면 얼마나 절약될까요?',
+        cmp_desc: '커피 4~5잔 값 1회 결제로 매년 수십만 원의 고정비와 반복 업무 시간을 아끼세요.',
+        cmp_h1: '비교 항목',
+        cmp_h2: '기존 방식 (월 구독 SaaS · 엑셀/카톡 수작업)',
+        cmp_h3: 'DeskKit Studio (1회 결제 평생소장)',
+        cmp_r1_m: '1년 유지 비용',
+        cmp_r1_o: '월 2.5만~6만 원 (연 30만~72만 원 계속 지출)',
+        cmp_r1_n: '✓ ₩19,000~₩29,000 단 1회 (2년차부터 0원)',
+        cmp_r2_m: '업무 소요 시간',
+        cmp_r2_o: '건당 10~15분 (엑셀 수정 · 카톡 복붙 · 번역)',
+        cmp_r2_n: '✓ 30초 완성 (1클릭 복사 · 즉시 A4 PDF 출력)',
+        cmp_r3_m: '서식 안정성',
+        cmp_r3_o: 'Mac ↔ Windows 이동 시 엑셀 줄바꿈·여백 깨짐',
+        cmp_r3_n: '✓ 모든 OS 브라우저에서 100% 동일한 A4 출력',
+        cmp_r4_m: '데이터 보안',
+        cmp_r4_o: '외부 클라우드 서버 저장 · 해지 시 접근 차단',
+        cmp_r4_n: '✓ 내 PC 100% 로컬 저장 · 오프라인 평생 실행',
         trust_1: '✓ 단일 HTML 파일 (설치 불필요)',
         trust_2: '✓ Mac · Windows · 오프라인 완벽 지원',
         trust_3: '✓ 외부 서버 전송 0% 개인정보 보호',
@@ -1686,6 +1804,7 @@
       },
       en: {
         nav_tools: 'Free Calculators',
+        nav_demo: '1-Min Live Demo',
         nav_solodesk: 'SoloDesk Studio',
         nav_staydesk: 'StayDesk Pro',
         nav_faq: 'FAQ',
@@ -1693,7 +1812,27 @@
         hero_title: 'Stop Renting Simple Tools.<br />Own Offline Micro Web Apps for Life.',
         hero_lead: 'Calculate freelance withholding & VAT or short-term rental net profit right now for free — then unlock complete, single-file lifetime workspaces with zero monthly fees.',
         hero_cta_tools: 'Try Free Calculators ↓',
+        hero_cta_demo: '⚡ Try 1-Min Live Demo',
         hero_cta_products: 'Explore Lifetime Apps',
+        cta_live_demo: '⚡ Live Demo',
+        cmp_kicker: 'ROI & COST SAVINGS',
+        cmp_title: 'How Much Do You Save in Year 1 vs Monthly SaaS?',
+        cmp_desc: 'Pay once (less than 5 coffees) and eliminate recurring software bills and copy-paste busywork forever.',
+        cmp_h1: 'Comparison',
+        cmp_h2: 'Monthly SaaS & Manual Spreadsheets',
+        cmp_h3: 'DeskKit Studio (One-Time Lifetime)',
+        cmp_r1_m: 'Annual Cost',
+        cmp_r1_o: '$20–$50/mo ($240–$600/yr recurring forever)',
+        cmp_r1_n: '✓ $19–$24 Once ($0/yr from Year 2 onward)',
+        cmp_r2_m: 'Prep Time',
+        cmp_r2_o: '10–15 min/task (manual edits, copy-paste, translate)',
+        cmp_r2_n: '✓ 30 Seconds (1-click briefs & crisp A4 PDFs)',
+        cmp_r3_m: 'PDF Formatting',
+        cmp_r3_o: 'Broken Excel columns across macOS & Windows',
+        cmp_r3_n: '✓ Pixel-identical A4 PDF print in any browser',
+        cmp_r4_m: 'Data Privacy',
+        cmp_r4_o: 'Locked on cloud servers · Lost if you cancel',
+        cmp_r4_n: '✓ 100% Local-First · Works offline forever',
         trust_1: '✓ Single HTML File (No Install)',
         trust_2: '✓ Works on macOS, Windows & Offline',
         trust_3: '✓ Zero Cloud Tracking — 100% Private',
@@ -1990,6 +2129,16 @@
         fixedEl.value = p.fixed;
         fixedEl.step = p.fixedStep;
       }
+
+      // Sync live demo links to preserve active language
+      const navDemo = document.getElementById('nav-demo-link');
+      if (navDemo) navDemo.href = 'demo.html?app=staydesk&lang=' + lang;
+      const heroDemo = document.getElementById('hero-demo-btn');
+      if (heroDemo) heroDemo.href = 'demo.html?app=staydesk&lang=' + lang;
+      document.querySelectorAll('.demo-link').forEach((link) => {
+        const app = link.dataset.demoApp || 'staydesk';
+        link.href = `demo.html?app=${app}&lang=${lang}`;
+      });
 
       renderTax();
       renderStay();

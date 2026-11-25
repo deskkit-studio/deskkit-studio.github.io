@@ -3,11 +3,12 @@
 구독료 0원 평생소장 로컬-퍼스트 웹앱 **SoloDesk Studio v1.0** & **StayDesk Pro v1.0** 공식 랜딩페이지 및 무료 SEO 유틸리티 허브입니다.
 
 ## 포함된 구성
-- `index.html`: 반응형 KR/EN 전환 랜딩페이지 + 인터랙티브 무료 계산기 2종
+- `index.html`: 반응형 KR/EN 전환 랜딩페이지 + 인터랙티브 무료 계산기 2종 + SaaS 비용 절감 비교표
   1. **프리랜서 3.3% 원천징수 · 부가세 10% 정산/역산 & 한글금액 계산기** (`SoloDesk Lite`)
   2. **에어비앤비·공유숙박 순수익(P&L) · 청소 원가 · 손익분기 계산기** (`StayDesk Lite`)
+- `demo.html`: 회원가입 없이 1분 만에 직접 체험하는 **실시간 라이브 데모 샌드박스** (`?app=staydesk` / `?app=solodesk`, `?lang=ko|en`) — 카톡/WhatsApp 청소 지시서, 4개국어 체크인 안내, 전자직인 A4 견적서·청소 정산서(데모 워터마크) 실시간 미리보기
 - `assets/`: 두 제품 KR/EN 실사 UI 스크린샷 13종 (SoloDesk 5종 + StayDesk KR 4종 + StayDesk EN 4종) + 1200×630 OpenGraph 소셜 공유 커버 (`og-cover.png`)
-- `robots.txt` / `sitemap.xml`: 검색 색인용 기본 파일
+- `robots.txt` / `sitemap.xml`: 검색 색인용 기본 파일 (`index.html` + `demo.html`)
 
 ## 1분 공개 배포 체크리스트 (화면 잠금 해제 후)
 1. `index.html` 상단 `CONFIG` 객체에 라이브된 Gumroad / 크몽 URL 입력
