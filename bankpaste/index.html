@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank CSV to Budget Spreadsheet Template — BankPaste Budget ($12, no bank login)</title>
+<meta name="description" content="Spreadsheet budget template for bank CSV exports with date, description and amount columns (US/UK number style). Keyword rules sort transactions into categories and flag rows no rule matches; monthly income, spending, budget vs actual. No bank linking, no subscription. $12.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://deskkit-studio.github.io/bankpaste/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deskkit-studio.github.io/bankpaste/">
+<meta property="og:title" content="BankPaste Budget — paste your bank CSV, get a categorized monthly budget">
+<meta property="og:description" content="A spreadsheet budget template that sorts a pasted bank CSV with keyword rules and flags rows no rule matches. No bank linking, no subscription.">
+<meta property="og:image" content="https://deskkit-studio.github.io/bankpaste/monthly.png">
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#0f172a;background:#f8fafc;line-height:1.6}
+main{max-width:760px;margin:0 auto;padding:32px 20px 60px}
+h1{font-size:1.9rem;line-height:1.25;margin:.2em 0 .4em}
+h2{font-size:1.25rem;margin-top:2em}
+.lead{font-size:1.1rem;color:#334155}
+.buy{display:inline-block;background:#0f172a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:600;margin:8px 0}
+.buy:hover{background:#1e293b}
+.note{font-size:.9rem;color:#475569}
+.box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px}
+img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:8px}
+code{background:#e2e8f0;padding:1px 5px;border-radius:4px}
+nav a,footer a{color:#334155}
+footer{margin-top:3em;font-size:.85rem;color:#64748b}
+</style>
+</head>
+<body>
+<main>
+<nav class="note"><a href="https://deskkit-studio.github.io/">DeskKit Studio</a> › BankPaste Budget</nav>
+
+<h1>Turn a bank CSV into a categorized monthly budget spreadsheet</h1>
+<p class="lead">BankPaste Budget is a spreadsheet template for people who want a real budget without linking their bank account to an app or paying a yearly subscription. You download a CSV from your bank and paste it in — it does not connect to your bank.</p>
+<p><a class="buy" href="https://gum.co/u/7r5nca5f">Get BankPaste Budget — $12 on Gumroad</a><br><span class="note">One-time price. 30-day refund if it doesn't work with your bank's CSV.</span></p>
+
+<p><img src="monthly.png" width="1600" height="900" alt="Monthly tab of the BankPaste Budget example file (made-up transactions): income, spending, left over, budget vs actual per category and the last 12 months."></p>
+<p class="note">The <em>Monthly</em> tab of the included example file, filled with made-up transactions (rendered in LibreOffice).</p>
+
+<h2>How it works</h2>
+<ol>
+<li>Paste your CSV into the <em>Paste</em> tab.</li>
+<li>On <em>Settings</em>, type which column is the date, description and amount.</li>
+<li>Keyword rules put each transaction in a category (first matching rule wins). Rows no rule matches are shown as <em>Uncategorized</em> and flagged, so you can fix them or add a rule for next time. Keywords can overlap, so glance over the result.</li>
+<li>The <em>Monthly</em> tab shows income, spending, what's left over, budget vs actual per category, and the last 12 months.</li>
+</ol>
+
+<h2>Before you buy — what it needs</h2>
+<div class="box">
+<ul>
+<li>A CSV export with a date, a description and either one signed amount column or separate money-out / money-in columns.</li>
+<li>Numbers in US/UK style (1,234.56). Dates as M/D/Y, D/M/Y or Y-M-D (you choose which).</li>
+<li>An amount the sheet can't read (e.g. "N/A" or "12 USD") becomes 0, not an error. Amounts in other number styles can come out wrong without any warning: in our LibreOffice test, 1.234,56 became 1.23456. Compare the month's totals with your bank statement.</li>
+<li>Up to 1,000 transactions per paste, one account or card per paste.</li>
+<li>Tested by us in LibreOffice. Uses only functions Excel 2010+ and Google Sheets document as supported, but we have not yet tested it ourselves in Excel or Google Sheets.</li>
+</ul>
+</div>
+
+<h2>Transfers and credit card bills</h2>
+<p><strong>Transfers are kept out of income and spending.</strong> Rows categorized as <em>Transfer</em> — by a starter rule or by you — are not counted as income or spending, so moving money to savings doesn't show up as earnings. The starter transfer rules (TRANSFER, XFER, TO SAVINGS) sit at the end of the rule list and the first matching rule wins, so a row with one of those words becomes a Transfer only if no rule above matched it. Glance over your <em>Transfer</em> rows once and fix any row in the <em>My category</em> column.</p>
+<p><strong>Credit card bills are left to you.</strong> One sheet holds one account, so whether a card payment is spending or a transfer depends on your setup. There are no starter rules for card bills or card payments. A card payment that matches no rule shows as <em>Uncategorized</em> (still counted, month marked "Provisional"); one whose description contains another starter keyword gets that category instead — e.g. "AMEX PAYMENT TRANSFER" becomes a Transfer. Check every card payment row and pick in <em>My category</em>: <em>Card Payments</em> (spending) if the card's purchases aren't tracked anywhere else; <em>Transfer</em> on the card's own statement; or, if you keep one copy for checking and one for the card and add them up, <em>Transfer</em> on both sides.</p>
+<p><strong>Uncategorized money is not hidden.</strong> It is included in <em>Left over</em> and the month is marked "Provisional" until you categorize it.</p>
+
+<h2>What you get</h2>
+<ul>
+<li>BankPaste-Budget.xlsx — the empty template (300 rule rows, 60 categories)</li>
+<li>BankPaste-Budget-DEMO.xlsx — a separate example copy with made-up transactions, so you can see it working before using your own data</li>
+<li>About 45 starter keyword rules for common merchants (edit or delete freely)</li>
+</ul>
+<p><strong>Privacy:</strong> the template has no macros, add-ons or scripts and sends nothing anywhere by itself. Where your data is stored depends on where you keep the file (your computer, Google Drive, etc.).</p>
+<p><strong>Refunds:</strong> if it doesn't work with your bank's CSV, reply to your Gumroad receipt email within 30 days and we'll refund you. You don't need to send us your CSV or any transaction data.</p>
+<p><a class="buy" href="https://gum.co/u/7r5nca5f">Get BankPaste Budget — $12 on Gumroad</a></p>
+
+<h2>Prefer to build it yourself? Free formulas</h2>
+<ul>
+<li><a href="https://github.com/deskkit-studio/bank-csv-spreadsheet-formulas">bank-csv-spreadsheet-formulas</a> (GitHub, MIT) — formulas that turn bank CSV amount and date text into real numbers, sort rows by keyword and total without transfers, with an example file.</li>
+<li><a href="https://dev.to/deskkitstudio/categorize-bank-csv-transactions-in-a-spreadsheet-with-one-formula-first-matching-keyword-wins-4ap1">Categorize bank CSV transactions in a spreadsheet with one formula</a> (DEV)</li>
+<li><a href="https://dev.to/deskkitstudio/turn-messy-bank-csv-amounts-and-dates-into-real-numbers-with-spreadsheet-formulas-24c1">Turn messy bank CSV amounts and dates into real numbers</a> (DEV)</li>
+</ul>
+<p class="note">These are written by the same seller as BankPaste Budget.</p>
+
+<footer>This is a budgeting spreadsheet, not financial or tax advice. Not affiliated with any bank or merchant. Sold by DeskKit Studio on Gumroad. · <a href="https://deskkit-studio.github.io/">DeskKit Studio home</a></footer>
+</main>
+</body>
+</html>
