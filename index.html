@@ -1422,13 +1422,14 @@
             <h3>BankPaste Budget</h3>
             <p class="product-desc">
               Paste a CSV exported from your bank and the spreadsheet sorts each transaction into a category with keyword rules.
-              Transfers (savings moves, card payments) are kept out of income and spending. No bank login, no app, no subscription.
+              Rows marked Transfer (by a starter rule such as TO SAVINGS, or by you) are kept out of income and spending. There are no starter rules for credit-card bill payments, and another keyword rule may still catch one, so check every card payment row and pick its category. No bank login, no app, no subscription.
             </p>
             <ul class="feature-list">
               <li><span class="check-dot indigo">✓</span><span><strong>Paste, don't type</strong>: one signed amount column or separate money-out / money-in columns</span></li>
               <li><span class="check-dot indigo">✓</span><span><strong>Uncategorized rows are flagged</strong>, not hidden — the month stays "Provisional" until you sort them</span></li>
               <li><span class="check-dot indigo">✓</span><span>Monthly income, spending, left over, budget vs actual, last 12 months</span></li>
               <li><span class="check-dot indigo">✓</span><span>No macros or scripts. Tested in LibreOffice; not yet tested by us in Excel or Google Sheets</span></li>
+              <li><span class="check-dot indigo">✓</span><span>US/UK-style amounts (1,234.56). An amount it can't read becomes 0, and other styles can come out wrong without a warning, so compare the month's totals with your bank statement</span></li>
             </ul>
             <div class="price-box">
               <div class="price-row">
@@ -1439,6 +1440,7 @@
             </div>
             <div class="cta-row">
               <a href="https://caremini.gumroad.com/l/bankpaste-budget" class="btn btn-outline" rel="noopener">See it on Gumroad ($12)</a>
+              <a href="https://github.com/deskkit-studio/bank-csv-spreadsheet-formulas" class="btn btn-outline" rel="noopener">Free formulas on GitHub</a>
             </div>
           </div>
         </div>
