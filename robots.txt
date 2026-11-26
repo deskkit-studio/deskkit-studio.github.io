@@ -1,3 +1,2 @@
 User-agent: *
 Allow: /
-Sitemap: https://deskkit-studio.github.io/sitemap.xml
